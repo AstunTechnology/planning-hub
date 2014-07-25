@@ -58,8 +58,7 @@ The national planning schema provides a fixed set of application status values l
     referred_to_sos     | Referred to SoS - in the process of being considered by the Secretary of State
     invalid             | Invalid - requires something to happen to it before it can be decided
     not_ours            | Not ours - belong to other planning authorities
-    registered          | Registered - received but not yet been processed and
-                        | validated
+    registered          | Registered - received but not yet been processed and validated
 
 ##### Query string
 
@@ -108,9 +107,12 @@ Parameter names: `case_date`, `decision_target_date`, `decision_notice_date`, `p
 
 ##### Values
 
-last_7_days | Last 7 days including the current day
-last_14_days | Last 14 days including the current day
-last_30_days | Last 30 days including the current day
+
+    Value        | Description
+    -------------|---------------------------------------
+    last_7_days  | Last 7 days including the current day
+    last_14_days | Last 14 days including the current day
+    last_30_days | Last 30 days including the current day
 
 ##### Query string
 
