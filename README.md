@@ -49,18 +49,14 @@ One or more application status constants. When specified via the query string mu
 The national planning schema provides a fixed set of application status values listed below together with the constant value used with this API:
 
     API Parameter value | National Planning Schema value
-    --------------------|------------------------------------------------------
+    --------------------|-------------------------------------------------------------------------------
     live                | Live - in the process of being decided
     withdrawn           | Withdrawn
     decided             | Decided
-    appeal              | Appeal - in the process of being decided via a
-                        | non-determination appeal
-    called_in           | Called in - in the process of being considered by the
-                        | Secretary of State
-    referred_to_sos     | Referred to SoS - in the process of being considered
-                        | by the Secretary of State
-    invalid             | Invalid - requires something to happen to it before
-                        | it can be decided
+    appeal              | Appeal - in the process of being decided via a non-determination appeal
+    called_in           | Called in - in the process of being considered by the Secretary of State
+    referred_to_sos     | Referred to SoS - in the process of being considered by the Secretary of State
+    invalid             | Invalid - requires something to happen to it before it can be decided
     not_ours            | Not ours - belong to other planning authorities
     registered          | Registered - received but not yet been processed and
                         | validated
@@ -147,14 +143,14 @@ Surrey Heath District
 Results can be ordered by one of the following fields:
 
     Field     | Description
-    ----------------------------------------------------
+    ----------|-----------------------------------------
     status    | Application status code (alphabetically)
     case_date | Case date (on date)
 
 An optional sort order can also be specified:
 
     Value | Description
-    ---------------------------------------
+    ------|--------------------------------
     asc   | Sort assending (a to z, 9 to 0)
     desc  | Decending (z to a, 9 to 0)
 
