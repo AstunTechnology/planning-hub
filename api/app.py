@@ -134,6 +134,7 @@ def is_predicate(arg):
 
 
 def build_sql(args):
+    args = [validate_arg(arg) for arg in args.items() if supported_arg(arg)]
     predicates = [to_sql(arg) for arg in args if is_predicate(arg)]
     where = 'WHERE %s' % ' AND '.join(predicates) if predicates else ''
     order = ''
@@ -162,8 +163,7 @@ def index():
 
 @app.route("/developmentcontrol/0.1/applications/search")
 def search():
-    args = [validate_arg(arg) for arg in request.args.items() if supported_arg(arg)]
-    sql = build_sql(args)
+    sql = build_sql(request.args)
     features = get_geojson(sql)
     return make_response(features, 200, {'Content-Type': 'application/json'})
 
