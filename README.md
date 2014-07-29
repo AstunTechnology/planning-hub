@@ -10,7 +10,7 @@ The project consists of three main components:
 
 ## Publishing API
 
-Web API to retrieve applications in [GeoJSON](http://geojson.org/) format optionally [filtering](#filter-by) and [sorting](#sort-by) on one of the fields described below.
+Web API to retrieve applications in [GeoJSON](http://geojson.org/) format optionally [filtering](#filter-by) and [sorting](#order-by) on one of the fields described below.
 
 ### Endpoints
 
@@ -140,7 +140,7 @@ Surrey Heath District
 
     bbox=-0.78,51.25,-0.53,51.4
 
-### Sort by
+### Order by
 
 Results can be ordered by one of the following fields:
 
