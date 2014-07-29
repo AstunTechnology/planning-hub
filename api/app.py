@@ -164,8 +164,11 @@ def index():
 @app.route("/developmentcontrol/0.1/applications/search")
 def search():
     sql = build_sql(request.args)
-    features = get_geojson(sql)
-    return make_response(features, 200, {'Content-Type': 'application/json'})
+    content = get_geojson(sql)
+    callback = request.args.get('callback')
+    if callback:
+        content = '%s(%s);' % (callback, content)
+    return make_response(content, 200, {'Content-Type': 'application/json'})
 
 
 if __name__ == "__main__":
