@@ -35,29 +35,20 @@ def sql_bbox(val):
     return '%s %s,%s %s' % tuple(val[0].split(','))
 
 
-SQL = """WITH results AS (SELECT * FROM apps %(where)s %(order)s)
+SQL = """WITH applications AS (SELECT * FROM planning.applications %(where)s %(order)s)
     SELECT row_to_json(fc, true)::text as features
         FROM (SELECT 'FeatureCollection' As type, array_to_json(array_agg(f), true) As features
             FROM (SELECT 'Feature' As type
             ,ST_AsGeoJSON(lg.wkb_geometry)::json As geometry
-            ,row_to_json((SELECT l FROM (SELECT extractdate, publisheruri, publisherlabel,
-                                                organisationuri, organisationlabel, casereference,
-                                                caseurl, casedate, servicetypeuri, servicetypelabel,
-                                                classificationuri, classificationlabel, casetext,
-                                                locationtext, decisiontargetdate, status,
-                                                coordinatereferencesystem, geox, geoy, geopointlicensingurl,
-                                                decision, decisiontype, decisionnoticedate, appealdecision,
-                                                geoareauri, geoarealabel, uprn, agent,
-                                                publicconsultationstartdate, publicconsultationenddate,
-                                                responsesfor, responsesagainst) As l), true) As properties
-            FROM results As lg) As f)  As fc;"""
+            ,row_to_json((SELECT l FROM (SELECT caseurl, geopointlicensingurl, publicconsultationstartdate, responsesfor, locationtext, agent, geoy, geox, decisiontargetdate, responsesagainst, geoareauri, organisationlabel, decision, servicetypeuri, classificationlabel, casereference, decisiontype, status, casetext, extractdate, publisherlabel, publicconsultationenddate, servicetypelabel, organisationuri, uprn, publisheruri, appealdecision, classificationuri, coordinatereferencesystem, casedate, geoarealabel, decisionnoticedate, groundarea, decisiondate, appealref, gsscode) As l), true) As properties
+            FROM applications As lg) As f)  As fc;"""
 
 date_range_pattern = 'last_7_days|last_14_days|last_30_days'
 
 ARGS = {
     'status': {
         'pattern': 'live|withdrawn|decided|appeal|called_in|referred_to_sos|invalid|not_ours|registered',
-        'sql': 'status IN (%s)',
+        'sql': 'status_api IN (%s)',
         'prep_fn': sql_in,
         'type': 'predicate'
     },
@@ -99,7 +90,7 @@ ARGS = {
     },
     'bbox': {
         'pattern': '-?\d+\.\d+,-?\d+\.\d+,-?\d+\.\d+,-?\d+\.\d+',
-        'sql': 'ST_Intersects(ST_SetSRID(\'BOX(%s)\'::box2d, 4326), apps.wkb_geometry)',
+        'sql': 'ST_Intersects(ST_SetSRID(\'BOX(%s)\'::box2d, 4326), planning.applications.wkb_geometry)',
         'prep_fn': sql_bbox,
         'type': 'predicate'
     },
