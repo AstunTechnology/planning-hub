@@ -160,7 +160,17 @@ def index():
 
 @app.route("/hubmap")
 def hubmap():
-    return render_template('hubmap.html', base_url=url_for('.index', _external=True)[0:-1])
+    maps = [
+        {
+            'url': '/developmentcontrol/0.1/applications/search?status=decided&gss_code=E07000214',
+            'title': 'Decided planning applications in Surrey Heath'
+        },
+        {
+            'url': '/developmentcontrol/0.1/applications/search?status=live&gss_code=E07000214&bbox=-0.806,51.286,-0.692,51.349',
+            'title': 'Live planning applications in the east of Surrey Heath'
+        }
+    ]
+    return render_template('hubmap.html', maps=maps, base_url=url_for('.index', _external=True)[0:-1])
 
 
 @app.route("/developmentcontrol/0.1/applications/search")

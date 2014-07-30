@@ -8,8 +8,22 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/hubmap.css') }}" />
   </head>
   <body>
-    <div class="hub-map" data-url="/developmentcontrol/0.1/applications/search?status=live&gss_code=E07000214&bbox=-0.806,51.286,-0.692,51.349"></div>
-    <div class="hub-map" data-url="/developmentcontrol/0.1/applications/search?status=decided&gss_code=E07000214"></div>
+      {% for map in maps %}
+          <div class="example-hub-map">
+              <h2>{{ map['title'] }}</h2>
+              <div class="hub-map" data-url="{{ map['url'] }}"></div>
+              <h3>Raw data</h3>
+              <p><a href="{{ map['url'] }}"><code>{{ map['url'] }}</code></a></p>
+              <!--
+              <h3>Embed</h3>
+              <p><pre>
+&lt;link rel="stylesheet" href="{{ base_url }}/hubmap/bundle.css"&gt;&lt;/script&gt;
+&lt;script src="{{ base_url }}/hubmap/bundle.js"&gt;&lt;/script&gt;
+&lt;div class="hub-map" data-url="{{ map['url'] }}"&gt;&lt;/div&gt;
+              </pre></p>
+              -->
+          </div>
+      {% endfor %}
     <script src="{{ url_for('static', filename='hubmap/lib/leaflet-0.7.3/leaflet.js') }}"></script>
     <script src="{{ url_for('static', filename='hubmap/lib/leaflet.ajax.min.js') }}"></script>
     <script>
