@@ -1,0 +1,13 @@
+.hub-map {
+  width: 400px;
+  height: 400px;
+  margin: 20px;
+}
+
+.leaflet-popup-content h2 {
+    margin: 8px 0;
+}
+
+.leaflet-popup-content p {
+    margin: 4px 0;
+}

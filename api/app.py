@@ -4,7 +4,7 @@ import psycopg2
 import psycopg2.extras
 import contextlib
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, url_for
 
 app = Flask(__name__)
 
@@ -156,6 +156,11 @@ def get_geojson(sql):
 @app.route("/")
 def index():
     return render_template('index.html')
+
+
+@app.route("/hubmap")
+def hubmap():
+    return render_template('hubmap.html', base_url=url_for('.index', _external=True)[0:-1])
 
 
 @app.route("/developmentcontrol/0.1/applications/search")
