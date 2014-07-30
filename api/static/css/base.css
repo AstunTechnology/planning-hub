@@ -1,5 +1,26 @@
-body {
-  font-family: helvetica, sans-serif;
-  margin: 0 2em;
+html, body {
+    height: 100%;
 }
 
+body {
+  font-family: helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #EEE;
+}
+
+code {
+    display: block;
+    color: #444;
+    background-color: lightYellow;
+    border: 1px solid #CCC;
+    padding: 0.5em;
+    white-space: pre-wrap;
+}
+
+.container {
+    width: 850px;
+    min-height: 100%;
+    padding: 1em 2em;
+    background-color: white;
+}
