@@ -1,0 +1,20 @@
+{
+  "name": "hubmap",
+  "version": "0.0.0",
+  "description": "Leaflet web map widget to display Surrey Planning Hub data",
+  "main": "main.js",
+  "scripts": {
+    "build": "rm -rf ./dist && mkdir ./dist && node_modules/.bin/browserify main.js -o dist/hubmap.js && node_modules/.bin/npm-css main.css -o dist/hubmap.css && cp -r node_modules/leaflet/dist/images ./dist/"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "leaflet": "~0.7.3",
+    "reqwest": "~1.1.2"
+  },
+  "devDependencies": {
+    "npm-css": "~0.2.3",
+    "browserify": "~5.9.1",
+    "uglifyify": "~2.5.0"
+  }
+}

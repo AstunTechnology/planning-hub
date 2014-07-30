@@ -1,0 +1,7 @@
+# Python
+__pycache__/
+env/
+*.py[cod]
+
+# JavaScript
+node_modules/

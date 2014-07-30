@@ -1,7 +1,10 @@
+@import "./node_modules/leaflet/dist/leaflet.css";
+
+/* HubMap overrides */
+
 .hub-map {
-  width: 800px;
+  width: 400px;
   height: 400px;
-  margin: 20px;
 }
 
 .leaflet-popup-content h2 {
