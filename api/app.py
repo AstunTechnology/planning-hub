@@ -8,10 +8,7 @@ from flask import Flask, render_template, request, make_response
 
 app = Flask(__name__)
 
-app.config['CONNECTION_STRING'] = "dbname='hub_test' user='hub_test' password='hub_test' host='localhost'"
-
-if os.environ.get('CONFIG_FILE'):
-    app.config.from_envvar('CONFIG_FILE')
+app.config['CONNECTION_STRING'] = os.environ['CONNECTION_STRING']
 
 
 def sql_in(s):
