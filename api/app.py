@@ -3,10 +3,22 @@ import re
 import psycopg2
 import psycopg2.extras
 import contextlib
+from werkzeug.urls import url_unquote_plus
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, make_response, url_for
+from jinja2 import ChoiceLoader, FileSystemLoader
+from flask import Flask, render_template, request, make_response, url_for, send_from_directory
 
 app = Flask(__name__)
+
+EMBED_DIR = os.path.join(app.static_folder, 'hubmap/dist')
+
+template_loader = ChoiceLoader([
+    app.jinja_loader,
+    FileSystemLoader([EMBED_DIR])
+])
+app.jinja_loader = template_loader
+
+app.jinja_env.globals.update(url_unquote_plus=url_unquote_plus)
 
 app.config['CONNECTION_STRING'] = os.environ['CONNECTION_STRING']
 
@@ -158,19 +170,27 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/hubmap")
-def hubmap():
+@app.route("/embed/<path:path>")
+def embed(path):
+    if path == 'hubmap.js':
+        return make_response(render_template('hubmap.js'), 200, {'Content-Type': 'application/javascript'})
+    else:
+        return send_from_directory(EMBED_DIR, path)
+
+
+@app.route("/maps")
+def maps():
     maps = [
         {
-            'url': '/developmentcontrol/0.1/applications/search?status=decided&gss_code=E07000214',
+            'url': url_for('.search', status='decided', gss_code='E07000214'),
             'title': 'Decided planning applications in Surrey Heath'
         },
         {
-            'url': '/developmentcontrol/0.1/applications/search?status=live&gss_code=E07000214&bbox=-0.806,51.286,-0.692,51.349',
+            'url': url_for('.search', status='live', gss_code='E07000214', bbox='-0.806,51.286,-0.692,51.349'),
             'title': 'Live planning applications in the east of Surrey Heath'
         }
     ]
-    return render_template('hubmap.html', maps=maps, base_url=url_for('.index', _external=True)[0:-1])
+    return render_template('maps.html', maps=maps)
 
 
 @app.route("/developmentcontrol/0.1/applications/search")

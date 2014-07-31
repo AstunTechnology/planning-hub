@@ -2,10 +2,10 @@ var L = require('leaflet').noConflict();
 var reqwest = require('reqwest');
 
 HubMap = window.HubMap || {};
-HubMap.BASE_URL = HubMap.BASE_URL || "http://planning-hub.surrey.gov.uk/";
+HubMap.BASE_URL = HubMap.BASE_URL || "{{ url_for('.index', _external=True).rstrip('/') }}";
 HubMap.PLAN_APP_INFO = HubMap.PLAN_APP_INFO || "<h2><a href='{caseurl}'>{casereference}</a></h2><p>{locationtext}</p><p>Status: {status}</p>";
 
-L.Icon.Default.imagePath = HubMap.BASE_URL + '/static/hubmap/dist/images/';
+L.Icon.Default.imagePath = HubMap.BASE_URL + "{{ url_for('.embed', path='images') }}";
 
 HubMap.map = function(elem, options) {
 
