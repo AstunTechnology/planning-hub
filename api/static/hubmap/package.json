@@ -4,7 +4,7 @@
   "description": "Leaflet web map widget to display Surrey Planning Hub data",
   "main": "main.js",
   "scripts": {
-    "build": "rm -rf ./dist && mkdir ./dist && node_modules/.bin/browserify main.js -o dist/hubmap.js && node_modules/.bin/npm-css main.css -o dist/hubmap.css && cp -r node_modules/leaflet/dist/images ./dist/"
+    "build": "mkdir -p ./dist && node_modules/.bin/browserify -g uglifyify main.js -o dist/hubmap.js && node_modules/.bin/npm-css main.css -o dist/hubmap.css && cp -r node_modules/leaflet/dist/images ./dist/"
   },
   "author": "",
   "license": "MIT",
