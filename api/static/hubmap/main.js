@@ -9,7 +9,7 @@ L.Icon.Default.imagePath = HubMap.BASE_URL + "{{ url_for('.embed', path='images'
 
 HubMap.map = function(elem, options) {
 
-    var map = L.map(elem).setView([51.505, -0.09], 8);
+    var map = L.map(elem).setView([51.23, -0.32], 9);
 
     var mqAttr = 'Tiles: <a href="http://www.mapquest.com/">MapQuest</a> - ';
     var osmAttr = 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors - ';
