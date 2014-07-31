@@ -11,9 +11,9 @@
         <h2>{{ map['title'] }}</h2>
         <div class="hub-map" data-url="{{ map['url'] }}"></div>
         <h3>Raw data</h3>
-        <p><a href="{{ map['url'] }}"><code>{{ url_for('.index', _external=True).rstrip('/') }}{{ url_unquote_plus(map['url']) }}</code></a></p>
+        <p><a href="{{ map['url'] }}"><code class="block">{{ url_for('.index', _external=True).rstrip('/') }}{{ url_unquote_plus(map['url']) }}</code></a></p>
         <h3>Embed</h3>
-        <p><code>
+        <p><code class="block">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;

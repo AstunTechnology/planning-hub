@@ -3,13 +3,19 @@ html, body {
 }
 
 body {
-  font-family: helvetica, sans-serif;
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  color: #333;
   margin: 0;
   padding: 0;
   background-color: #EEE;
 }
 
 code {
+    color: #444;
+    background-color: lightYellow;
+}
+
+code.block {
     display: block;
     color: #444;
     background-color: lightYellow;
