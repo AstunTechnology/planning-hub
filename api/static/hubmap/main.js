@@ -25,8 +25,8 @@ HubMap.map = function(elem, options) {
 
     var apps = L.geoJson(null, {onEachFeature: popUp}).addTo(map);
 
-    url = HubMap.BASE_URL + options.url;
-    reqwest({url: url, type: 'jsonp'}).then(function (data) {
+    data_url = HubMap.BASE_URL + options.data_url;
+    reqwest({url: data_url, type: 'jsonp'}).then(function (data) {
         map.fitBounds(apps.addData(data).getBounds());
     });
 
@@ -39,9 +39,30 @@ HubMap.map = function(elem, options) {
 
 };
 
-var maps = document.getElementsByClassName('hub-map');
+HubMap.createMaps = function() {
 
-for (var i = 0, map; i < maps.length; i++) {
-    map = maps[i];
-    HubMap.map(map, {url: map.getAttribute("data-url")});
-}
+    var elems = document.getElementsByClassName('hub-map'),
+        maps = [];
+
+    if (elems.length === 0) {
+        HubMap.warn('No elements found with the "hub-map" class at this time. You may need to call HubMap.createMaps when the page has loaded.');
+    }
+
+    for (var i = 0, elem, data_url; i < elems.length; i++) {
+        elem = elems[i];
+        data_url = elem.getAttribute("data-url");
+        if (!data_url) {
+            HubMap.warn('No data URL passed, no applications will be displayed. Element: ', elem);
+        }
+        maps.push(HubMap.map(elem, {data_url: data_url}));
+    }
+
+    return maps;
+
+};
+
+HubMap.warn = function() {
+    if (console && console.warn) console.warn.apply(console, Array.prototype.slice.call(arguments));
+};
+
+HubMap.createMaps();
