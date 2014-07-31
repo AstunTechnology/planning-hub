@@ -1,4 +1,4 @@
-var L = require('leaflet');
+var L = require('leaflet').noConflict();
 var reqwest = require('reqwest');
 
 HubMap = window.HubMap || {};
