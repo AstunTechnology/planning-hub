@@ -3,12 +3,15 @@ import re
 import psycopg2
 import psycopg2.extras
 import contextlib
+from flask.ext.misaka import Misaka
 from werkzeug.urls import url_unquote_plus
 from datetime import datetime, timedelta
 from jinja2 import ChoiceLoader, FileSystemLoader
 from flask import Flask, render_template, request, make_response, url_for, send_from_directory
 
 app = Flask(__name__)
+md = Misaka(tables=True, autolink=True, toc=True)
+md.init_app(app)
 
 EMBED_DIR = os.path.join(app.static_folder, 'hubmap/dist')
 

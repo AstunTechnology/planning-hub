@@ -1,6 +1,6 @@
-## Publishing API
+## Publishing API and Embedded Maps
 
-Web API to retrieve applications in [GeoJSON](http://geojson.org/) format optionally [filtering](#filter-by) and [sorting](#order-by) on one of the fields described below.
+Web API to retrieve applications in [GeoJSON](http://geojson.org/) format optionally filtering and sorting on one of the fields described below. API usage can be found in [./templates/md/api.md](./templates/md/api.md).
 
 ## Installation
 
@@ -28,7 +28,7 @@ To run a development server activate the virtual environment then run:
 
 ## Development
 
-### HubMap
+### Embedded Maps (HubMap)
 
 HubMap uses Node npm together with Browserify and npm-css to build and bundle it's assets.
 

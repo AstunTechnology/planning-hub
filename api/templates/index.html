@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<h1>Surrey Planning Hub</h1>
-<aside>Access to planning applications harvested from authorities in Surrey County via a consistent API.</aside>
-<p>
-    <a href="{{ url_for('.maps') }}">Example planning application maps.</a>
-</p>
-<p>
-    <a href="https://github.com/AstunTechnology/planning-hub">Further details and usage can be found on GitHub.</a>
-</p>
+{% include './md/intro.md' %}
+{% include './md/api.md' %}
 {% endblock %}

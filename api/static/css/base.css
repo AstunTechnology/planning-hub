@@ -44,6 +44,43 @@ nav ul li a {
     text-decoration: none;
 }
 
+table {
+    border-collapse:collapse;
+    border-spacing:0
+}
+
+td,th {
+    padding:0
+}
+
+table {
+    width:100%;
+    overflow:auto;
+    display:block
+}
+
+table th {
+    font-weight:bold
+}
+
+table thead tr {
+    background-color: #ddd;
+}
+
+table th, table td {
+    border:1px solid #ddd;
+    padding:6px 13px
+}
+
+table tr {
+    border-top:1px solid #ccc;
+    background-color:#fff
+}
+
+table tr:nth-child(2n) {
+    background-color:#f8f8f8
+}
+
 .container {
     width: 850px;
     min-height: 100%;
