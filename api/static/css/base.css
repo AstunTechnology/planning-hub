@@ -18,6 +18,26 @@ code {
     white-space: pre-wrap;
 }
 
+nav {
+    border-bottom: 1px solid #CCC;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0.5em 1em;
+    text-align: right;
+}
+
+nav ul li {
+    display: inline;
+    padding: 0 0.25em;
+}
+
+nav ul li a {
+    text-decoration: none;
+}
+
 .container {
     width: 850px;
     min-height: 100%;
