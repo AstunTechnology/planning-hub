@@ -60,10 +60,11 @@
         for (var i = 0, elem, data_url; i < elems.length; i++) {
             elem = elems[i];
             data_url = elem.getAttribute("data-url");
-            if (!data_url) {
-                HubMap.warn('No data URL passed, no applications will be displayed. Element: ', elem);
+            if (data_url) {
+                maps.push(HubMap.map(elem, {data_url: data_url}));
+            } else {
+                HubMap.warn('No data URL passed, skipping creating map. Element: ', elem);
             }
-            maps.push(HubMap.map(elem, {data_url: data_url}));
         }
 
         return maps;
