@@ -91,8 +91,7 @@ table tr:nth-child(2n) {
 
 /* -- HubMap Example Page Styles -- */
 
-.hub-map {
-  width: auto;
+.hub-map, .map {
   max-width: 800px;
   height: 400px;
   margin: 0.5em;
