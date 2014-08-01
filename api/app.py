@@ -213,14 +213,43 @@ def maps():
     return render_template('maps.html', nocode_maps=nocode_maps, manual_maps=manual_maps)
 
 
-@app.route("/developmentcontrol/0.1/applications/search")
-def search():
-    sql = build_sql(request.args)
+def _search(request, args):
+    sql = build_sql(args)
     content = get_geojson(sql)
     callback = request.args.get('callback')
     if callback:
         content = '%s(%s);' % (callback, content)
     return make_response(content, 200, {'Content-Type': 'application/json'})
+
+
+def not_acceptable(reason):
+    return make_response('HTTP 406: Not Acceptable. %s' % reason, 406, {'Content-Type': 'text/plain'})
+
+
+@app.route("/developmentcontrol/0.1/applications/search")
+def search():
+    args = dict(request.args)
+    return _search(request, args)
+
+
+@app.route("/developmentcontrol/0.1/applications/gss_code/<code>")
+def gss_code(code):
+    k, v = validate_arg(['gss_code', code])
+    if v:
+        args = dict(request.args)
+        args['gss_code'] = code.split(',')
+        return _search(request, args)
+    return not_acceptable('Invalid GSS code: %s' % code)
+
+
+@app.route("/developmentcontrol/0.1/applications/status/<code>")
+def status(code):
+    k, v = validate_arg(['status', code])
+    if v:
+        args = dict(request.args)
+        args['status'] = code.split(',')
+        return _search(request, args)
+    return not_acceptable('Invalid status code: %s' % code)
 
 
 if __name__ == "__main__":

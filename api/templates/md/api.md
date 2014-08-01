@@ -21,13 +21,13 @@ Search for applications passing [filter parameters](#toc_6) via the query string
 
 Applications published by a given authority identified by [GSS code](http://en.wikipedia.org/wiki/ONS_coding_system#Current_GSS_coding_system):
 
-    /developmentcontrol/0.1/applications/gss_code/<code>?
+    {{ url_unquote_plus(url_for('.gss_code', code='<code>')) }}?
 
 #### Single status code
 
 Applications with a given application status code:
 
-    /developmentcontrol/0.1/applications/status/<status>?
+    {{ url_unquote_plus(url_for('.status', code='<status>')) }}?
 
 ### Response
 
@@ -162,12 +162,12 @@ Order by case date most recent first:
 
 ### Example API requests
 
-All of the following requests return live and decided applications for Surrey Heath District ordered by case date:
+All of the following requests return live applications for Surrey Heath District ordered by case date:
 
-    {{ url_unquote_plus(url_for('.search', status='live,decided', gss_code='E07000214', orderby='case_date')) }}
+    {{ url_unquote_plus(url_for('.search', status='live', gss_code='E07000214', order_by='case_date')) }}
 
-    /developmentcontrol/0.1/applications/gss_code/E07000214?status=live,decided&orderby=case_date
+    {{ url_unquote_plus(url_for('.gss_code', code='E07000214', status='live', order_by='case_date')) }}
 
-    /developmentcontrol/0.1/applications/status/live?gss_code=E07000214&orderby=case_date
+    {{ url_unquote_plus(url_for('.status', code='live', gss_code='E07000214', order_by='case_date')) }}
 
 {% endfilter %}
