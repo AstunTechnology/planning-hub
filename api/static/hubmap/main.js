@@ -32,7 +32,11 @@
 
         data_url = HubMap.BASE_URL + options.data_url;
         reqwest({url: data_url, type: 'jsonp'}).then(function (data) {
-            map.fitBounds(apps.addData(data).getBounds());
+            if (data.features && data.features.length) {
+                map.fitBounds(apps.addData(data).getBounds());
+            } else {
+                HubMap.warn('No results returned for data_url: ', data_url);
+            }
         });
 
         function popUp(f, l){
