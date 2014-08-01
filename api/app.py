@@ -189,7 +189,7 @@ def embed(path):
 
 @app.route("/maps")
 def maps():
-    maps = [
+    nocode_maps = [
         {
             'url': url_for('.search', status='decided', gss_code='E07000214'),
             'title': 'Decided planning applications in Surrey Heath'
@@ -199,7 +199,14 @@ def maps():
             'title': 'Live planning applications in the east of Surrey Heath'
         }
     ]
-    return render_template('maps.html', maps=maps)
+    manual_maps = [
+        {
+            'url': url_for('.search', status='decided', gss_code='E07000214', decision_date='last_90_days'),
+            'title': 'Decided planning applications in Surrey Heath with a decision date with the last 90 days',
+            'type': 'manual'
+        }
+    ]
+    return render_template('maps.html', nocode_maps=nocode_maps, manual_maps=manual_maps)
 
 
 @app.route("/developmentcontrol/0.1/applications/search")

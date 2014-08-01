@@ -5,14 +5,27 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
-<h1>Surrey Planning Hub - Planning Application Maps</h1>
-{% for map in maps %}
+{% filter markdown %}
+
+# Surrey Planning Hub - Planning Application Maps
+
+A simple JavaScript API is available to facilitate easily embedding a map showing planning applications published via the API.
+
+Once you have included [`hubmap.js`]({{ url_for('.embed', path='hubmap.js') }}) and [`hubmap.css`]({{ url_for('.embed', path='hubmap.css') }}) in your page there are two ways of embedding a map:
+
+## No code (almost)
+
+Within your HTML page add a `div` element with a class of `hub-map` and an attribute called `data-url` whose value is a path defining your API call as shown the following examples:
+
+{% endfilter %}
+
+{% for map in nocode_maps %}
     <div class="example-hub-map">
-        <h2>{{ map['title'] }}</h2>
+        <h3>{{ map['title'] }}</h2>
         <div class="hub-map" data-url="{{ map['url'] }}"></div>
-        <h3>Raw data</h3>
+        <h4>Raw data</h3>
         <p><a href="{{ map['url'] }}"><code class="block">{{ url_for('.index', _external=True).rstrip('/') }}{{ url_unquote_plus(map['url']) }}</code></a></p>
-        <h3>Embed</h3>
+        <h4>Embed</h3>
         <p><code class="block">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -20,12 +33,74 @@
         &lt;link rel="stylesheet" href="{{ url_for('.embed', path='hubmap.css', _external=True) }}"&gt;&lt;/link&gt;
     &lt;/head&gt;
     &lt;body&gt;
-    &lt;div class="hub-map" data-url="{{ map['url'] }}"&gt;&lt;/div&gt;
+        &lt;div class="hub-map" data-url="{{ map['url'] }}"&gt;&lt;/div&gt;
         &lt;script src="{{ url_for('.embed', path='hubmap.js', _external=True) }}"&gt;&lt;/script&gt;
     &lt;/body&gt;
 &lt;/html&gt;
         </code></p>
     </div>
 {% endfor %}
+
 <script src="{{ url_for('.embed', path='hubmap.js') }}"></script>
+
+{% filter markdown %}
+
+## JavaScript API
+
+A small JavaScript API is exposed by HubMap to allow some customisation and for maps to be created manually.
+
+### Functions
+
+Functions are provided to create maps, for instance a map can be manually create with JavaScript by calling `HubMap.map` passing a reference to an element and an `options` object with a `data_url` property which defines your API call.
+
+If creating maps manually be sure that `hubmap.js` is loaded before you try and access the `HubMap` object. The easiest way to achive this is to include the script in your HTML document before your custom JavaScript code as is done in the example below.
+
+    Function                | Description
+    ------------------------|------------------------------------------------------
+    `HubMap.map(<HTMLElement ¦ String> id, options)` | Instantiates a map object given a div element (or its id) and an object with options including `data_url` whose value is a path defining your API call.
+    `HubMap.createMaps()` | Creates a map for each element found in the page with a class of `hub-map` and a `data-url` attribute whose value is a path defining your API call.
+
+### Properties
+
+Properties are used to customise `HubMap` and should be set before creating a map.
+
+    Property                | Description
+    ------------------------|------------------------------------------------------
+    `HubMap.HubMap.PLAN_APP_INFO` | Overrides the template used to display planning application information in the popup when a marker is clicked.
+    `HubMap.BASE_URL` | Overrides the URL of the server used to query features from.
+
+{% endfilter %}
+
+{% for map in manual_maps %}
+    <div class="example-hub-map">
+        <h3>{{ map['title'] }}</h2>
+        <div class="hub-map manual-map"></div>
+        <script type="text/javascript">
+            HubMap.PLAN_APP_INFO = "<h2><a href='{caseurl}'>{casereference}</a></h2><p>{locationtext}</p><p>Status: {status}</p><p>Classification: {classificationlabel}</p>"
+            var options = {data_url: "{{ map['url']|safe }}"};
+            var map = HubMap.map(document.getElementsByClassName('manual-map')[0], options);
+        </script>
+        <h4>Raw data</h3>
+        <p><a href="{{ map['url'] }}"><code class="block">{{ url_for('.index', _external=True).rstrip('/') }}{{ url_unquote_plus(map['url']) }}</code></a></p>
+        <h4>Embed</h3>
+        <p><code class="block">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;link rel="stylesheet" href="{{ url_for('.embed', path='hubmap.css', _external=True) }}"&gt;&lt;/link&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="hub-map manual-map"&gt;&lt;/div&gt;
+        &lt;script src="{{ url_for('.embed', path='hubmap.js', _external=True) }}"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript"&gt;
+            HubMap.PLAN_APP_INFO = "&lt;h2&gt;&lt;a href='{caseurl}'&gt;{casereference}&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;{locationtext}&lt;/p&gt;&lt;p&gt;Status: {status}&lt;/p&gt;&lt;p&gt;Classification: {classificationlabel}&lt;/p&gt;"
+            var options = {data_url: "{{ map['url']|safe }}"};
+            var map = HubMap.map(document.getElementsByClassName('manual-map')[0], options);
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+        </code></p>
+    </div>
+{% endfor %}
+
 {% endblock %}
