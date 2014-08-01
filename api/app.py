@@ -9,18 +9,22 @@ from datetime import datetime, timedelta
 from jinja2 import ChoiceLoader, FileSystemLoader
 from flask import Flask, render_template, request, make_response, url_for, send_from_directory
 
+# Define the Flask app and add support for Markdown in templates
 app = Flask(__name__)
 md = Misaka(tables=True, autolink=True, toc=True)
 md.init_app(app)
 
-EMBED_DIR = os.path.join(app.static_folder, 'hubmap/dist')
-
+# Add the to the template search path so that we can treat our built hubmap.js
+# as a template without having to manually copy it to the standard template
+# directory
+DIST_DIR = os.path.join(app.static_folder, 'hubmap/dist')
 template_loader = ChoiceLoader([
     app.jinja_loader,
-    FileSystemLoader([EMBED_DIR])
+    FileSystemLoader([DIST_DIR])
 ])
 app.jinja_loader = template_loader
 
+# Expose additional functions in templates
 app.jinja_env.globals.update(url_unquote_plus=url_unquote_plus)
 
 app.config['CONNECTION_STRING'] = os.environ['CONNECTION_STRING']
@@ -184,7 +188,7 @@ def embed(path):
     if path == 'hubmap.js':
         return make_response(render_template('hubmap.js'), 200, {'Content-Type': 'application/javascript'})
     else:
-        return send_from_directory(EMBED_DIR, path)
+        return send_from_directory(DIST_DIR, path)
 
 
 @app.route("/maps")
