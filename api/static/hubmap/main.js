@@ -7,12 +7,12 @@
 }('HubMap', this, function (L, reqwest) {
 
     HubMap = this.HubMap || {};
-    HubMap.BASE_URL = HubMap.BASE_URL || "{{ url_for('.index', _external=True).rstrip('/') }}";
-    HubMap.PLAN_APP_INFO = HubMap.PLAN_APP_INFO || "<h2><a href='{caseurl}'>{casereference}</a></h2><p>{locationtext}</p><p>Status: {status}</p>";
 
     HubMap.map = function(elem, options) {
 
-        L.Icon.Default.imagePath = HubMap.BASE_URL + "/embed/images";
+        var baseUrl = HubMap.BASE_URL || "{{ url_for('.index', _external=True).rstrip('/') }}";
+        var planAppInfo = HubMap.PLAN_APP_INFO || "<h2><a href='{caseurl}'>{casereference}</a></h2><p>{locationtext}</p><p>Status: {status}</p>";
+        L.Icon.Default.imagePath = baseUrl + "/embed/images";
 
         var map = L.map(elem).setView([51.23, -0.32], 9);
 
@@ -30,7 +30,7 @@
 
         var apps = L.geoJson(null, {onEachFeature: popUp}).addTo(map);
 
-        data_url = HubMap.BASE_URL + options.data_url;
+        data_url = baseUrl + options.data_url;
         reqwest({url: data_url, type: 'jsonp'}).then(function (data) {
             if (data.features && data.features.length) {
                 map.fitBounds(apps.addData(data).getBounds());
@@ -40,7 +40,7 @@
         });
 
         function popUp(f, l){
-            var content = L.Util.template(HubMap.PLAN_APP_INFO, f.properties);
+            var content = L.Util.template(planAppInfo, f.properties);
             l.bindPopup(content);
         }
 
