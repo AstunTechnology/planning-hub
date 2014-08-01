@@ -6,7 +6,7 @@
   "scripts": {
     "build": "mkdir -p ./dist && node_modules/.bin/browserify -g uglifyify main.js -o dist/hubmap.js && node_modules/.bin/npm-css main.css -o dist/hubmap.css && cp -r node_modules/leaflet/dist/images ./dist/"
   },
-  "author": "",
+  "author": "Matt Walker <mattwalker@astuntechnology.com>",
   "license": "MIT",
   "dependencies": {
     "leaflet": "~0.7.3",
