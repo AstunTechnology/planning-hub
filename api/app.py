@@ -31,7 +31,7 @@ def sql_in(s):
 
 
 def sql_date_range(val):
-    token_to_days = {'last_7_days': 7, 'last_14_days': 14, 'last_30_days': 30}
+    token_to_days = {'last_7_days': 7, 'last_14_days': 14, 'last_30_days': 30, 'last_90_days': 90}
     val = datetime.now() - timedelta(days=token_to_days.get(val[0]))
     val = val.date()
     return psycopg2.extensions.adapt(val)
@@ -55,7 +55,7 @@ SQL = """WITH applications AS (SELECT * FROM planning.applications %(where)s %(o
             ,row_to_json((SELECT l FROM (SELECT caseurl, geopointlicensingurl, publicconsultationstartdate, responsesfor, locationtext, agent, geoy, geox, decisiontargetdate, responsesagainst, geoareauri, organisationlabel, decision, servicetypeuri, classificationlabel, casereference, decisiontype, status, casetext, extractdate, publisherlabel, publicconsultationenddate, servicetypelabel, organisationuri, uprn, publisheruri, appealdecision, classificationuri, coordinatereferencesystem, casedate, geoarealabel, decisionnoticedate, groundarea, decisiondate, appealref, gsscode) As l), true) As properties
             FROM applications As lg) As f)  As fc;"""
 
-date_range_pattern = 'last_7_days|last_14_days|last_30_days'
+date_range_pattern = 'last_7_days|last_14_days|last_30_days|last_90_days'
 
 ARGS = {
     'status': {
@@ -85,6 +85,12 @@ ARGS = {
     'decision_notice_date': {
         'pattern': date_range_pattern,
         'sql': 'decisionnoticedate >= %s',
+        'prep_fn': sql_date_range,
+        'type': 'predicate'
+    },
+    'decision_date': {
+        'pattern': date_range_pattern,
+        'sql': 'decisiondate >= %s',
         'prep_fn': sql_date_range,
         'type': 'predicate'
     },

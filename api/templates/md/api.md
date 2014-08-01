@@ -100,7 +100,7 @@ Surrey Heath and Mole Valley
 
 #### Date range
 
-Parameter names: `case_date`, `decision_target_date`, `decision_notice_date`, `public_consultation_start_date`, `public_consultation_end_date`
+Parameter names: `case_date`, `decision_target_date`, `decision_notice_date`, `decision_date`, `public_consultation_start_date`, `public_consultation_end_date`
 
 ##### Values
 
@@ -110,6 +110,7 @@ Parameter names: `case_date`, `decision_target_date`, `decision_notice_date`, `p
     last_7_days  | Last 7 days including the current day
     last_14_days | Last 14 days including the current day
     last_30_days | Last 30 days including the current day
+    last_90_days | Last 90 days including the current day
 
 ##### Query string
 
