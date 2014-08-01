@@ -10,7 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "leaflet": "~0.7.3",
-    "reqwest": "~1.1.2"
+    "reqwest": "~1.1.2",
+    "leaflet.markercluster": "~0.4.0"
   },
   "devDependencies": {
     "npm-css": "~0.2.3",

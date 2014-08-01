@@ -1,6 +1,6 @@
 !function (name, context, definition) {
     if (typeof module != 'undefined' && module.exports) {
-        module.exports = definition(require('leaflet').noConflict(), require('reqwest'));
+        module.exports = definition(require('leaflet'), require('reqwest'), require('leaflet.markercluster'));
     } else {
         context[name] = definition(L, reqwest);
     }
@@ -28,12 +28,15 @@
 
         mq.addTo(map);
 
-        var apps = L.geoJson(null, {onEachFeature: popUp}).addTo(map);
+        var markers = L.markerClusterGroup();
+        var apps = L.geoJson(null, {onEachFeature: popUp});
 
         data_url = baseUrl + options.data_url;
         reqwest({url: data_url, type: 'jsonp'}).then(function (data) {
             if (data.features && data.features.length) {
-                map.fitBounds(apps.addData(data).getBounds());
+                apps.addData(data);
+                markers.addLayer(apps).addTo(map);
+                map.fitBounds(markers.getBounds());
             } else {
                 HubMap.warn('No results returned for data_url: ', data_url);
             }
