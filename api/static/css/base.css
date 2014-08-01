@@ -13,6 +13,7 @@ body {
 code {
     color: #444;
     background-color: lightYellow;
+    white-space: pre-wrap;
 }
 
 code.block {
@@ -21,7 +22,7 @@ code.block {
     background-color: lightYellow;
     border: 1px solid #CCC;
     padding: 0.5em;
-    white-space: pre-wrap;
+    overflow-x: auto;
 }
 
 nav {
@@ -82,7 +83,7 @@ table tr:nth-child(2n) {
 }
 
 .container {
-    width: 850px;
+    max-width: 850px;
     min-height: 100%;
     padding: 1em 2em;
     background-color: white;
@@ -91,7 +92,8 @@ table tr:nth-child(2n) {
 /* -- HubMap Example Page Styles -- */
 
 .hub-map {
-  width: 800px;
+  width: auto;
+  max-width: 800px;
   height: 400px;
-  margin: 20px;
+  margin: 0.5em;
 }
