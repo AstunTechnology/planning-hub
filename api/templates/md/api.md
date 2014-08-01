@@ -11,17 +11,23 @@ All endpoints allow the results to be filtered and sorted via query string param
 
 Endpoints for the current version of the API are shown below:
 
-#### `{{ url_for('.search') }}?`
+#### Search
 
-Search for applications passing [filter parameters](#toc_6) via the query string.
+Search for applications passing [filter parameters](#toc_6) via the query string:
 
-#### `/developmentcontrol/0.1/applications/gss_code/<code>?`
+    {{ url_for('.search') }}?
 
-Applications published by a given authority identified by [GSS code](http://en.wikipedia.org/wiki/ONS_coding_system#Current_GSS_coding_system)
+#### Single Authority
 
-#### `/developmentcontrol/0.1/applications/status/<status>?`
+Applications published by a given authority identified by [GSS code](http://en.wikipedia.org/wiki/ONS_coding_system#Current_GSS_coding_system):
 
-Applications with a given application status code.
+    /developmentcontrol/0.1/applications/gss_code/<code>?
+
+#### Single status code
+
+Applications with a given application status code:
+
+    /developmentcontrol/0.1/applications/status/<status>?
 
 ### Response
 
@@ -157,7 +163,7 @@ Order by case date most recent first:
 
 All of the following requests return live and decided applications for Surrey Heath District ordered by case date:
 
-{{ url_for('.search', status='live,decided', gss_code='E07000214', orderby='case_date', _external=True) }}
+    {{ url_unquote_plus(url_for('.search', status='live,decided', gss_code='E07000214', orderby='case_date')) }}
 
     /developmentcontrol/0.1/applications/gss_code/E07000214?status=live,decided&orderby=case_date
 
