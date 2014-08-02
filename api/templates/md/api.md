@@ -164,10 +164,10 @@ Order by case date most recent first:
 
 All of the following requests return live applications for Surrey Heath District ordered by case date:
 
-    {{ url_unquote_plus(url_for('.search', status='live', gss_code='E07000214', order_by='case_date')) }}
+[`{{ url_unquote_plus(url_for('.search', status='live', gss_code='E07000214', order_by='case_date')) }}`]({{ url_for('.search', status='live', gss_code='E07000214', order_by='case_date') }})
 
-    {{ url_unquote_plus(url_for('.gss_code', code='E07000214', status='live', order_by='case_date')) }}
+[`{{ url_unquote_plus(url_for('.gss_code', code='E07000214', status='live', order_by='case_date')) }}`]({{ url_for('.gss_code', code='E07000214', status='live', order_by='case_date') }})
 
-    {{ url_unquote_plus(url_for('.status', code='live', gss_code='E07000214', order_by='case_date')) }}
+[`{{ url_unquote_plus(url_for('.status', code='live', gss_code='E07000214', order_by='case_date')) }}`]({{ url_for('.status', code='live', gss_code='E07000214', order_by='case_date') }})
 
 {% endfilter %}
