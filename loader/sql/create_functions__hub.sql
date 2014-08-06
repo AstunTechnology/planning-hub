@@ -1,0 +1,6 @@
+CREATE OR REPLACE FUNCTION version()
+RETURNS numeric AS
+$BODY$
+  SELECT 0.12::numeric;
+$BODY$
+LANGUAGE sql;
