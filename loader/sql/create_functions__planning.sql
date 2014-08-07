@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION planning.version()
 RETURNS numeric AS
 $BODY$
-  SELECT 0.18::numeric;
+  SELECT 0.21::numeric;
 $BODY$
 LANGUAGE sql;
 
@@ -11,7 +11,21 @@ CREATE OR REPLACE FUNCTION planning.update_applications_data(table_name text)
 $BODY$
 DECLARE
 	update_sql text;
+  incorrect_statuses text[];
 BEGIN
+  EXECUTE 'SELECT array_agg(DISTINCT status)
+FROM "planning".'|| quote_ident(table_name) ||'
+WHERE status IS NOT NULL AND status NOT IN (
+	SELECT name
+	FROM "planning"."applications_statuses"
+);' INTO incorrect_statuses;
+  IF array_length(incorrect_statuses, 1) > 0 THEN
+    RAISE data_exception
+      USING
+        MESSAGE='Statuses not found in allowed list: ''' || array_to_string(incorrect_statuses, ''', ''') || '''.'
+        , HINT='Replace invalid values with allowed ones.';
+  END IF;
+
 	update_sql := '
 DELETE FROM "planning"."applications_all_data"
 WHERE gsscode_id IN (

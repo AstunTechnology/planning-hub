@@ -3,6 +3,7 @@ import logging
 import os
 import re
 
+from datetime import datetime
 from decimal import *
 
 import psycopg2
@@ -18,7 +19,7 @@ DELIMITER = '\t'
 CONNECTION_STRING = os.environ['CONNECTION_STRING']
 LOG_LEVEL = next(val for val in [os.environ.get('HUB_LOG_LEVEL'), 'INFO']
                  if val is not None)
-VERSION = {'hub': Decimal('0.11'), 'planning': Decimal('0.19')}
+VERSION = {'hub': Decimal('0.14'), 'planning': Decimal('0.21')}
 
 
 assert CONNECTION_STRING
@@ -134,6 +135,19 @@ def prepare_db_schema(conn, schema_name):
       raise
 
 
+def log_import(conn, schema_name, category, publisher, uri, start, finish,
+               successful, message):
+  func_name = '"hub"."import_attempted"'
+  with conn:
+    with conn.cursor() as curs:
+      try:
+        curs.callproc(func_name, [schema_name, category, publisher, uri,
+                                  successful, message, start, finish])
+      except Exception as e:
+        log['hub'].critical('Abort: Failure logging import: {}'.format(e))
+        raise
+
+
 def get_feed_values(parent, fields, required, schema_name=None):
   if(schema_name):
     log_handler = log[schema_name]
@@ -153,10 +167,10 @@ def get_feed_values(parent, fields, required, schema_name=None):
   return values
 
 
-def sql_import_feed(conn, schema_name, category, source, fields, values):
+def sql_import_feed(conn, schema_name, category, publisher, fields, values):
   field_names = ', '.join(fields)
   field_defs = ' text, '.join(fields) + ' text'
-  table_name = '{}_{}'.format(category, source)
+  table_name = '{}_{}'.format(category, publisher)
   fqtn = '"{}"."{}"'.format(schema_name, table_name)
   drop_sql = 'DROP TABLE IF EXISTS {}'.format(fqtn)
   create_sql = 'CREATE TABLE {} ({})'.format(fqtn, field_defs)
@@ -174,9 +188,13 @@ def sql_import_feed(conn, schema_name, category, source, fields, values):
       curs.callproc(update_sp, [table_name])
 
 
-def import_feed(conn, schema_name, category, source, uri, required_fields=[],
+def import_feed(conn, schema_name, category, publisher, uri, required_fields=[],
                 optional_fields=[]):
-  assert required_fields and optional_fields
+  message = 'Import successful'
+  successful = True
+  start = datetime.utcnow()
+  if not required_fields and not optional_fields:
+    message = 'No fields configured for this import!'
   log[schema_name].info('Attempting load of {}'.format(uri))
   resp = requests.get(uri)
   root = etree.fromstring(resp.text)
@@ -200,18 +218,25 @@ def import_feed(conn, schema_name, category, source, uri, required_fields=[],
       all_values.append(values)
 
   if len(all_values) != len(nodes):
-    err_msg = ('XML for {} from {} ({}) does not contain '
-               'all required values').format(category, source, uri)
-    log[schema_name].error(err_msg)
+    successful = False
+    message = ('XML for {} from {} ({}) does not contain '
+               'all required values').format(category, publisher, uri)
+    log[schema_name].error(message)
   else:
     log[schema_name].info('Feed loaded')
     try:
-      sql_import_feed(conn, schema_name, category, source,
+      sql_import_feed(conn, schema_name, category, publisher,
                       required_fields + optional_fields, all_values)
+      log[schema_name].info(message)
     except (psycopg2.ProgrammingError, psycopg2.DataError) as e:
-      err_msg = 'Import of feed for {} from {} ({}) failed: {}'.format(
-                category, source, uri, e)
-      log[schema_name].error(err_msg)
+      successful = False
+      message = 'Import of feed for {} from {} ({}) failed: {}'.format(
+                category, publisher, uri, e)
+      log[schema_name].error(message)
+
+  finish = datetime.utcnow()
+  log_import(conn, schema_name, category, publisher, uri, start, finish,
+             successful, message)
 
 
 
@@ -241,8 +266,8 @@ if __name__ == '__main__':
     planning_log.error('Planning applications feed file could not be opened')
   if lines:
     for line in lines:
-      source, uri = line.split('|')
-      import_feed(conn, 'planning', 'applications', source, uri,
+      publisher, uri = line.split('|')
+      import_feed(conn, 'planning', 'applications', publisher, uri,
                   required_fields=required_fields,
                   optional_fields=optional_fields)
   else:
