@@ -13,18 +13,20 @@ from lxml import etree
 
 from postgres_logging import PostgresHandler
 
+NULL = '\N'
+DELIMITER = '\t'
 CONNECTION_STRING = os.environ['CONNECTION_STRING']
 LOG_LEVEL = next(val for val in [os.environ.get('HUB_LOG_LEVEL'), 'INFO']
                  if val is not None)
 VERSION = {'hub': Decimal('0.11'), 'planning': Decimal('0.19')}
 
+
 assert CONNECTION_STRING
 
 logging.basicConfig(level=getattr(logging, LOG_LEVEL.upper()),
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%m-%d %H:%M',
-                    filename='app.log',
-                    filemode='w')
+                    datefmt='%m-%d %H:%M', filename='app.log', filemode='w',
+                    backupCount=9)
 console = logging.StreamHandler()
 console.setLevel(logging.ERROR)
 formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
@@ -132,7 +134,7 @@ def prepare_db_schema(conn, schema_name):
       raise
 
 
-def get_required_values(parent, fields, schema_name=None):
+def get_feed_values(parent, fields, required, schema_name=None):
   if(schema_name):
     log_handler = log[schema_name]
   else:
@@ -140,24 +142,14 @@ def get_required_values(parent, fields, schema_name=None):
   values = []
   for field in fields:
     node = parent.find(field)
-    if node is None or not node.text.strip():
+    text = '' if node is None else node.text.strip() if node.text else ''
+    if required and not text:
       log_handler.error('Required "{}" value missing or empty '.format(field))
     else:
-      value = node.text.strip()
+      value = text if text else NULL
       values.append(value)
-  assert len(fields) == len(values)
-  return values
-
-
-def get_optional_values(parent, fields, schema_name=None):
-  values = []
-  for field in fields:
-    node = parent.find(field)
-    if node is None or not node.text:
-      value = ''
-    else:
-      value = node.text.strip()
-    values.append(value)
+  if required:
+    assert len(fields) == len(values)
   return values
 
 
@@ -168,18 +160,18 @@ def sql_import_feed(conn, schema_name, category, source, fields, values):
   fqtn = '"{}"."{}"'.format(schema_name, table_name)
   drop_sql = 'DROP TABLE IF EXISTS {}'.format(fqtn)
   create_sql = 'CREATE TABLE {} ({})'.format(fqtn, field_defs)
-  formatted_values = '\n'.join(['\t'.join(row) for row in values])
+  formatted_values = '\n'.join([DELIMITER.join(row) for row in values])
   pseudo_file = StringIO.StringIO(formatted_values)
   with conn:
     with conn.cursor() as curs:
       curs.execute(drop_sql)
       curs.execute(create_sql)
-      curs.copy_expert("COPY {} ({}) FROM STDIN DELIMITER '\t'".format(
-                        fqtn, field_names), pseudo_file)
+      curs.copy_expert("COPY {} ({}) FROM STDIN "
+                       "DELIMITER '{}' NULL '{}'".format(fqtn, field_names,
+                       DELIMITER, NULL), pseudo_file)
       log[schema_name].info('Feed data imported into database')
       update_sp = '"{}"."update_{}_data"'.format(schema_name, category)
       curs.callproc(update_sp, [table_name])
-
 
 
 def import_feed(conn, schema_name, category, source, uri, required_fields=[],
@@ -195,15 +187,15 @@ def import_feed(conn, schema_name, category, source, uri, required_fields=[],
   for node in nodes:
     count = count + 1
     try:
-      required_values = get_required_values(node, required_fields,
-                                            schema_name)
+      required_values = get_feed_values(node, required_fields, True,
+                                        schema_name)
     except AssertionError as e:
       error = True
       log[schema_name].error('Missing required values in record {}'.format(
                              count))
     else:
-      optional_values = get_optional_values(node, optional_fields,
-                                            schema_name)
+      optional_values = get_feed_values(node, optional_fields, False,
+                                        schema_name)
       values = required_values + optional_values
       all_values.append(values)
 
@@ -216,7 +208,7 @@ def import_feed(conn, schema_name, category, source, uri, required_fields=[],
     try:
       sql_import_feed(conn, schema_name, category, source,
                       required_fields + optional_fields, all_values)
-    except psycopg2.ProgrammingError as e:
+    except (psycopg2.ProgrammingError, psycopg2.DataError) as e:
       err_msg = 'Import of feed for {} from {} ({}) failed: {}'.format(
                 category, source, uri, e)
       log[schema_name].error(err_msg)

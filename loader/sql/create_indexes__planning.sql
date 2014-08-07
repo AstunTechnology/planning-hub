@@ -36,3 +36,8 @@ CREATE INDEX applications_statuses_id_idx
   ON planning.applications_statuses
   USING btree
   (id );
+
+CREATE INDEX applications_statuses_api_lookup_idx
+  ON planning.applications_statuses
+  USING btree
+  (api_lookup );
