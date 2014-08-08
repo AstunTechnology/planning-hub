@@ -1,10 +1,13 @@
 import StringIO
+import email
 import logging
 import os
 import re
 
 from datetime import datetime
 from decimal import *
+from email.mime.text import MIMEText
+from smtplib import SMTP
 
 import psycopg2
 import psycopg2.extras
@@ -16,13 +19,16 @@ from postgres_logging import PostgresHandler
 
 NULL = '\N'
 DELIMITER = '\t'
-CONNECTION_STRING = os.environ['CONNECTION_STRING']
 LOG_LEVEL = next(val for val in [os.environ.get('HUB_LOG_LEVEL'), 'INFO']
                  if val is not None)
 VERSION = {'hub': Decimal('0.16'), 'planning': Decimal('0.21')}
+CONNECTION_STRING = os.environ['CONNECTION_STRING']
+SMTP_HOST = os.environ['SMTP_HOST']
+SMTP_USER = os.environ['SMTP_USER']
+SMTP_PASS = os.environ['SMTP_PASS']
+HUB_ADMIN = os.environ['HUB_ADMIN']
+HUB_EMAIL = os.environ['HUB_EMAIL']
 
-
-assert CONNECTION_STRING
 log_format = '%(asctime)s %(name)-12s %(levelname)-8s ''%(message)s'
 logging.basicConfig(level=getattr(logging, LOG_LEVEL.upper()),
                     format=log_format, datefmt='%m-%d %H:%M',
@@ -40,6 +46,21 @@ for schema_name in VERSION.keys():
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SQL_DIR = os.path.join(SCRIPT_DIR, 'sql')
 
+assert (CONNECTION_STRING and SMTP_HOST and SMTP_USER
+        and SMTP_PASS and HUB_ADMIN)
+
+def send_alert(text, schema_name, category, publisher_email=None):
+    recipients = [HUB_ADMIN]
+    if publisher_email:
+        recipients.append(publisher_email)
+    message = MIMEText(text, 'plain')
+    message['To'] = ', '.join(recipients)
+    message['Subject'] = '{} alert ({})'.format(schema_name.title(),
+                                                category.title())
+    smtp = SMTP(SMTP_HOST)
+    smtp.starttls()
+    smtp.login(SMTP_USER, SMTP_PASS)
+    smtp.sendmail(HUB_EMAIL, recipients, message.as_string())
 
 def init_schema(conn, schema_name):
     sql = '''
@@ -192,10 +213,17 @@ def sql_import_feed(conn, schema_name, category, publisher, fields, values):
             log[schema_name].info('Feed data pushed to live')
 
 
-def import_feed(conn, schema_name, category, publisher, uri,
+def import_feed(conn, schema_name, category, feed_details,
                 required_fields=[], optional_fields=[]):
+
     message = 'Import successful'
     successful = True
+    publisher = feed_details[0]
+    uri = feed_details[1]
+    if len(feed_details) > 2:
+        email = feed_details[2]
+    else:
+        email = None
     start = datetime.utcnow()
     if not required_fields and not optional_fields:
         message = 'No fields configured for this import!'
@@ -242,6 +270,9 @@ def import_feed(conn, schema_name, category, publisher, uri,
     log_import(conn, schema_name, category, publisher, uri, start, finish,
                successful, message)
 
+    if not successful:
+        send_alert(message, schema_name, category, publisher_email=email)
+
 
 if __name__ == '__main__':
     logging.info('>>> Hub data load commencing <<<')
@@ -270,8 +301,8 @@ if __name__ == '__main__':
                            'could not be opened')
     if lines:
         for line in lines:
-            publisher, uri = line.split('|')
-            import_feed(conn, 'planning', 'applications', publisher, uri,
+            feed_details = line.split('|')
+            import_feed(conn, 'planning', 'applications', feed_details,
                         required_fields=required_fields,
                         optional_fields=optional_fields)
     else:
