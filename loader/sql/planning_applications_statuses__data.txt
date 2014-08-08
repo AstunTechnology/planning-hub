@@ -1,0 +1,9 @@
+1|live|Live|in the process of being decided
+2|withdrawn|Withdrawn|\N
+3|decided|Decided|\N
+4|appeal|Appeal|in the process of being decided via a non-determination appeal
+5|called_in|Called in|in the process of being considered by the Secretary of State
+6|referred_to_sos|Referred to SoS|in the process of being considered by the Secretary of State
+7|invalid|Invalid|requires something to happen to it before it can be decided
+8|not_ours|Not ours|belong to other planning authorities
+9|registered|Registered|received but not yet been processed and validated

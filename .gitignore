@@ -5,3 +5,10 @@ env/
 
 # JavaScript
 node_modules/
+
+# Settings
+loader/planning_applications_feeds.txt
+
+# Logs
+*.log
+
