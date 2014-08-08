@@ -36,7 +36,7 @@ def sql_in(s):
 
 
 def sql_date_range(val):
-    token_to_days = {'last_7_days': 7, 'last_14_days': 14, 'last_30_days': 30, 'last_90_days': 90}
+    token_to_days = {'last_7_days': 6, 'last_14_days': 13, 'last_30_days': 29, 'last_90_days': 89}
     val = datetime.now() - timedelta(days=token_to_days.get(val[0]))
     val = val.date()
     return psycopg2.extensions.adapt(val)
