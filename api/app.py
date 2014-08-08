@@ -57,7 +57,7 @@ SQL = """WITH applications AS (SELECT * FROM planning.applications %(where)s %(o
         FROM (SELECT 'FeatureCollection' As type, array_to_json(array_agg(f), true) As features
             FROM (SELECT 'Feature' As type
             ,ST_AsGeoJSON(lg.wkb_geometry)::json As geometry
-            ,row_to_json((SELECT l FROM (SELECT caseurl, geopointlicensingurl, publicconsultationstartdate, responsesfor, locationtext, agent, geoy, geox, decisiontargetdate, responsesagainst, geoareauri, organisationlabel, decision, servicetypeuri, classificationlabel, casereference, decisiontype, status, casetext, extractdate, publisherlabel, publicconsultationenddate, servicetypelabel, organisationuri, uprn, publisheruri, appealdecision, classificationuri, coordinatereferencesystem, casedate, geoarealabel, decisionnoticedate, groundarea, decisiondate, appealref, gsscode) As l), true) As properties
+            ,row_to_json((SELECT l FROM (SELECT caseurl, geopointlicensingurl, publicconsultationstartdate, responsesfor, locationtext, agent, geoy, geox, decisiontargetdate, responsesagainst, geoareauri, organisationlabel, decision, servicetypeuri, classificationlabel, casereference, decisiontype, status, status_api, casetext, extractdate, publisherlabel, publicconsultationenddate, servicetypelabel, organisationuri, uprn, publisheruri, appealdecision, classificationuri, coordinatereferencesystem, casedate, geoarealabel, decisionnoticedate, groundarea, decisiondate, appealref, gsscode) As l), true) As properties
             FROM applications As lg) As f)  As fc;"""
 
 date_range_pattern = 'last_7_days|last_14_days|last_30_days|last_90_days'
