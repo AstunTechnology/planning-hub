@@ -27,7 +27,8 @@ app.jinja_loader = template_loader
 # Expose additional functions in templates
 app.jinja_env.globals.update(url_unquote_plus=url_unquote_plus)
 
-app.config['CONNECTION_STRING'] = os.environ['CONNECTION_STRING']
+if 'CONNECTION_STRING' in os.environ:
+    app.config['CONNECTION_STRING'] = os.environ['CONNECTION_STRING']
 
 
 def sql_in(s):
