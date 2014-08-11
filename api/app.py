@@ -43,7 +43,7 @@ def sql_date_range(val):
     return psycopg2.extensions.adapt(val)
 
 
-def sql_order_by(vals):
+def sql_orderby(vals):
     vals = [s.replace('_', '') for s in vals]
     val = ', '.join(vals)
     return val
@@ -105,43 +105,43 @@ ARGS = {
         'prep_fn': sql_in,
         'type': 'predicate'
     },
-    'gss_code': {
+    'gsscode': {
         'pattern': 'E\d{8}',
         'sql': 'gsscode IN (%s)',
         'prep_fn': sql_in,
         'type': 'predicate'
     },
-    'case_date': {
+    'casedate': {
         'pattern': date_range_pattern,
         'sql': 'casedate >= %s',
         'prep_fn': sql_date_range,
         'type': 'predicate'
     },
-    'decision_target_date': {
+    'decisiontargetdate': {
         'pattern': date_range_pattern,
         'sql': 'decisiontargetdate >= %s',
         'prep_fn': sql_date_range,
         'type': 'predicate'
     },
-    'decision_notice_date': {
+    'decisionnoticedate': {
         'pattern': date_range_pattern,
         'sql': 'decisionnoticedate >= %s',
         'prep_fn': sql_date_range,
         'type': 'predicate'
     },
-    'decision_date': {
+    'decisiondate': {
         'pattern': date_range_pattern,
         'sql': 'decisiondate >= %s',
         'prep_fn': sql_date_range,
         'type': 'predicate'
     },
-    'public_consultation_start_date': {
+    'publicconsultationstartdate': {
         'pattern': date_range_pattern,
-        'sql': 'publicconsultationstart_date >= %s',
+        'sql': 'publicconsultationstartdate >= %s',
         'prep_fn': sql_date_range,
         'type': 'predicate'
     },
-    'public_consultation_end_date': {
+    'publicconsultationenddate': {
         'pattern': date_range_pattern,
         'sql': 'publicconsultationenddate >= %s',
         'prep_fn': sql_date_range,
@@ -153,13 +153,13 @@ ARGS = {
         'prep_fn': sql_bbox,
         'type': 'predicate'
     },
-    'order_by': {
-        'pattern': 'status|case_date',
+    'orderby': {
+        'pattern': 'status|casedate',
         'sql': 'ORDER BY %s',
-        'prep_fn': sql_order_by,
+        'prep_fn': sql_orderby,
         'type': 'statement'
     },
-    'sort_order': {
+    'sortorder': {
         'pattern': 'asc|desc',
         'sql': '%s',
         'prep_fn': lambda x: x[0].upper(),
@@ -197,12 +197,12 @@ def build_sql(args):
     predicates = [to_sql(arg) for arg in args if is_predicate(arg)]
     where = 'WHERE %s' % ' AND '.join(predicates) if predicates else ''
     order = ''
-    order_by = dict(args).get('order_by')
-    if order_by:
-        order = to_sql(('order_by', order_by))
-        sort_order = dict(args).get('sort_order')
-        if sort_order:
-            order += ' %s' % to_sql(('sort_order', sort_order))
+    orderby = dict(args).get('orderby')
+    if orderby:
+        order = to_sql(('orderby', orderby))
+        sortorder = dict(args).get('sortorder')
+        if sortorder:
+            order += ' %s' % to_sql(('sortorder', sortorder))
     sql = SQL % {'where': where, 'order': order}
     return sql
 
@@ -233,17 +233,17 @@ def embed(path):
 def maps():
     nocode_maps = [
         {
-            'url': url_for('.search', status='decided', gss_code='E07000214'),
+            'url': url_for('.search', status='decided', gsscode='E07000214'),
             'title': 'Decided planning applications in Surrey Heath'
         },
         {
-            'url': url_for('.search', status='live', gss_code='E07000214', bbox='-0.806,51.286,-0.692,51.349'),
+            'url': url_for('.search', status='live', gsscode='E07000214', bbox='-0.806,51.286,-0.692,51.349'),
             'title': 'Live planning applications in the east of Surrey Heath'
         }
     ]
     manual_maps = [
         {
-            'url': url_for('.search', status='decided', gss_code='E07000214', decision_date='last_90_days'),
+            'url': url_for('.search', status='decided', gsscode='E07000214', decisiondate='last_90_days'),
             'title': 'Decided planning applications in Surrey Heath with a decision date with the last 90 days',
             'type': 'manual'
         }
@@ -272,12 +272,12 @@ def search():
     return _search(request, args)
 
 
-@app.route("/developmentcontrol/0.1/applications/gss_code/<code>")
-def gss_code(code):
-    k, v = validate_arg(['gss_code', code])
+@app.route("/developmentcontrol/0.1/applications/gsscode/<code>")
+def gsscode(code):
+    k, v = validate_arg(['gsscode', code])
     if v:
         args = dict(request.args)
-        args['gss_code'] = code.split(',')
+        args['gsscode'] = code.split(',')
         return _search(request, args)
     return not_acceptable('Invalid GSS code: %s' % code)
 
