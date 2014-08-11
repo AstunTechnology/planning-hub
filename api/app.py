@@ -254,10 +254,12 @@ def maps():
 def _search(request, args):
     sql = build_sql(args)
     content = get_geojson(sql)
+    headers = {'Content-Type': 'application/json'}
     callback = request.args.get('callback')
     if callback:
         content = '%s(%s);' % (callback, content)
-    return make_response(content, 200, {'Content-Type': 'application/json'})
+        headers['Content-Type'] = 'application/javascript'
+    return make_response(content, 200, headers)
 
 
 def not_acceptable(reason):

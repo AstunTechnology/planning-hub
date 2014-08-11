@@ -134,3 +134,15 @@ def test_search_no_features():
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
     eq_(len(feats.get('features')), 0)
+
+
+def test_search_json():
+    r = client.get('/developmentcontrol/0.1/applications/search?')
+    eq_(r.status_code, 200)
+    eq_(r.headers.get('Content-Type'), 'application/json')
+
+
+def test_search_jsonp():
+    r = client.get('/developmentcontrol/0.1/applications/search?callback=foo')
+    eq_(r.status_code, 200)
+    eq_(r.headers.get('Content-Type'), 'application/javascript')
