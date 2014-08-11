@@ -27,7 +27,8 @@ app.jinja_loader = template_loader
 # Expose additional functions in templates
 app.jinja_env.globals.update(url_unquote_plus=url_unquote_plus)
 
-app.config['CONNECTION_STRING'] = os.environ['CONNECTION_STRING']
+if 'CONNECTION_STRING' in os.environ:
+    app.config['CONNECTION_STRING'] = os.environ['CONNECTION_STRING']
 
 
 def sql_in(s):
@@ -35,7 +36,7 @@ def sql_in(s):
 
 
 def sql_date_range(val):
-    token_to_days = {'last_7_days': 7, 'last_14_days': 14, 'last_30_days': 30, 'last_90_days': 90}
+    token_to_days = {'last_7_days': 6, 'last_14_days': 13, 'last_30_days': 29, 'last_90_days': 89}
     val = datetime.now() - timedelta(days=token_to_days.get(val[0]))
     val = val.date()
     return psycopg2.extensions.adapt(val)
@@ -56,7 +57,7 @@ SQL = """WITH applications AS (SELECT * FROM planning.applications %(where)s %(o
         FROM (SELECT 'FeatureCollection' As type, array_to_json(array_agg(f), true) As features
             FROM (SELECT 'Feature' As type
             ,ST_AsGeoJSON(lg.wkb_geometry)::json As geometry
-            ,row_to_json((SELECT l FROM (SELECT caseurl, geopointlicensingurl, publicconsultationstartdate, responsesfor, locationtext, agent, geoy, geox, decisiontargetdate, responsesagainst, geoareauri, organisationlabel, decision, servicetypeuri, classificationlabel, casereference, decisiontype, status, casetext, extractdate, publisherlabel, publicconsultationenddate, servicetypelabel, organisationuri, uprn, publisheruri, appealdecision, classificationuri, coordinatereferencesystem, casedate, geoarealabel, decisionnoticedate, groundarea, decisiondate, appealref, gsscode) As l), true) As properties
+            ,row_to_json((SELECT l FROM (SELECT caseurl, geopointlicensingurl, publicconsultationstartdate, responsesfor, locationtext, agent, geoy, geox, decisiontargetdate, responsesagainst, geoareauri, organisationlabel, decision, servicetypeuri, classificationlabel, casereference, decisiontype, status, status_api, casetext, extractdate, publisherlabel, publicconsultationenddate, servicetypelabel, organisationuri, uprn, publisheruri, appealdecision, classificationuri, coordinatereferencesystem, casedate, geoarealabel, decisionnoticedate, groundarea, decisiondate, appealref, gsscode) As l), true) As properties
             FROM applications As lg) As f)  As fc;"""
 
 date_range_pattern = 'last_7_days|last_14_days|last_30_days|last_90_days'

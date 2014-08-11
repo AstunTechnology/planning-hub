@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="http://127.0.0.1:5000/embed/hubmap.css"></link>
+    </head>
+    <body>
+        <h1>Embedded HubMap in body, manual map creation</h1>
+        <div id="map" style="height: 400px"></div>
+        <script src="http://127.0.0.1:5000/embed/hubmap.js"></script>
+        <script>
+            var map = HubMap.map(document.getElementById('map'), {data_url: '/developmentcontrol/0.1/applications/search?status=decided&gss_code=E07000214'});
+        </script>
+    </body>
+</html>
