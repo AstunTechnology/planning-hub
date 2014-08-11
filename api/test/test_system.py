@@ -126,3 +126,11 @@ def test_search_order_status():
     pg_sorted = map(get_status, feats.get('features'))
     py_sorted = list(reversed(sorted(pg_sorted)))
     eq_(pg_sorted, py_sorted)
+
+
+def test_search_no_features():
+    # Search for a gss_code that does not exist
+    r = client.get('/developmentcontrol/0.1/applications/search?gss_code=E07000000')
+    eq_(r.status_code, 200)
+    feats = json.loads(r.data)
+    eq_(len(feats.get('features')), 0)

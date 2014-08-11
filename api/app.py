@@ -3,6 +3,7 @@ import re
 import psycopg2
 import psycopg2.extras
 import contextlib
+import pg2geojson
 from flask.ext.misaka import Misaka
 from werkzeug.urls import url_unquote_plus
 from datetime import datetime, timedelta
@@ -52,13 +53,48 @@ def sql_bbox(val):
     return '%s %s,%s %s' % tuple(val[0].split(','))
 
 
-SQL = """WITH applications AS (SELECT * FROM planning.applications %(where)s %(order)s)
-    SELECT row_to_json(fc, true)::text as features
-        FROM (SELECT 'FeatureCollection' As type, array_to_json(array_agg(f), true) As features
-            FROM (SELECT 'Feature' As type
-            ,ST_AsGeoJSON(lg.wkb_geometry)::json As geometry
-            ,row_to_json((SELECT l FROM (SELECT caseurl, geopointlicensingurl, publicconsultationstartdate, responsesfor, locationtext, agent, geoy, geox, decisiontargetdate, responsesagainst, geoareauri, organisationlabel, decision, servicetypeuri, classificationlabel, casereference, decisiontype, status, status_api, casetext, extractdate, publisherlabel, publicconsultationenddate, servicetypelabel, organisationuri, uprn, publisheruri, appealdecision, classificationuri, coordinatereferencesystem, casedate, geoarealabel, decisionnoticedate, groundarea, decisiondate, appealref, gsscode) As l), true) As properties
-            FROM applications As lg) As f)  As fc;"""
+SQL = """
+    SELECT
+        ST_AsGeoJSON(wkb_geometry)::json As geom,
+        caseurl,
+        geopointlicensingurl,
+        publicconsultationstartdate,
+        responsesfor,
+        locationtext,
+        agent,
+        to_json(geoy) as geoy,
+        to_json(geox) as geox,
+        to_char(decisiontargetdate, 'YYYY-MM-DD') as decisiontargetdate,
+        responsesagainst,
+        geoareauri,
+        organisationlabel,
+        decision,
+        servicetypeuri,
+        classificationlabel,
+        casereference,
+        decisiontype,
+        status,
+        status_api,
+        casetext,
+        extractdate,
+        publisherlabel,
+        to_char(publicconsultationenddate, 'YYYY-MM-DD') as publicconsultationenddate,
+        servicetypelabel,
+        organisationuri,
+        uprn,
+        publisheruri,
+        appealdecision,
+        classificationuri,
+        coordinatereferencesystem,
+        to_char(casedate, 'YYYY-MM-DD') as casedate,
+        geoarealabel,
+        to_char(decisionnoticedate, 'YYYY-MM-DD') as decisionnoticedate,
+        groundarea,
+        to_char(decisiondate, 'YYYY-MM-DD') as decisiondate,
+        appealref,
+        gsscode
+    FROM planning.applications %(where)s %(order)s
+"""
 
 date_range_pattern = 'last_7_days|last_14_days|last_30_days|last_90_days'
 
@@ -175,8 +211,9 @@ def get_geojson(sql):
     conn = psycopg2.connect(app.config['CONNECTION_STRING'])
     with contextlib.closing(conn.cursor(cursor_factory=psycopg2.extras.DictCursor)) as cur:
         cur.execute(sql)
-        result = cur.fetchall()
-        return result[0].get('features')
+        rows = cur.fetchall()
+        json = pg2geojson.to_str(cur, rows, 'geom')
+        return json
 
 
 @app.route("/")
