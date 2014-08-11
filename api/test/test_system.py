@@ -143,6 +143,11 @@ def test_search_json():
 
 
 def test_search_jsonp():
-    r = client.get('/developmentcontrol/0.1/applications/search?callback=foo')
+    callback = 'foo'
+    r = client.get('/developmentcontrol/0.1/applications/search?callback=%s' % callback)
     eq_(r.status_code, 200)
     eq_(r.headers.get('Content-Type'), 'application/javascript')
+    head = '%s(' % callback
+    tail = ');'
+    eq_(head, r.data[0:len(head)])
+    eq_(tail, r.data[-len(tail):])
