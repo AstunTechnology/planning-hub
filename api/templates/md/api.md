@@ -31,7 +31,7 @@ Applications with a given application status code:
 
 ### Response
 
-The response of the API will be a list of applications containing all fields in the national planning schema in GeoJSON format (with the mime-type `application/json`) or an error response with appropriate HTTP status code.
+The response of the API will be a list of applications containing all fields in the national planning schema as a GeoJSON FeatureCollection. If a `callback` parameter is included then the response will have a content-type of `application/javascript` and will include the appropriate JSONP padding, otherwise the response will be plain JSON with a content-type of `application/json`.
 
 ### Filter by
 
@@ -159,6 +159,16 @@ An optional sort order can also be specified:
 Order by case date most recent first:
 
     orderby=status&sortorder=desc
+
+### JSONP
+
+> "JSONP or "JSON with padding" is a communication technique used in JavaScript programs running in web browsers to request data from a server in a different domain" - [https://en.wikipedia.org/wiki/JSONP](https://en.wikipedia.org/wiki/JSONP)
+
+In order to make a JSONP request simply pass a `callback` query string parameter specifying the name of the callback. Libraries such as jQuery provide support for JSONP, see [jQuery.getJSON](http://api.jquery.com/jQuery.getJSON/#jsonp) for more information.
+
+#### Query string
+
+    callback=foo
 
 ### Example API requests
 
