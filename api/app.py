@@ -56,43 +56,18 @@ def sql_bbox(val):
 SQL = """
     SELECT
         ST_AsGeoJSON(wkb_geometry)::json As geom,
-        caseurl,
-        geopointlicensingurl,
-        publicconsultationstartdate,
-        responsesfor,
+        agent, appealdecision, appealref,
+        casedate, casereference, casetext, caseurl,
+        classificationlabel, classificationuri, coordinatereferencesystem,
+        decision, decisiondate, decisionnoticedate, decisiontargetdate, decisiontype,
+        extractdate, geoarealabel,
+        geoareauri, geopointlicensingurl, geox, geoy, groundarea, gsscode,
         locationtext,
-        agent,
-        to_json(geoy) as geoy,
-        to_json(geox) as geox,
-        to_char(decisiontargetdate, 'YYYY-MM-DD') as decisiontargetdate,
-        responsesagainst,
-        geoareauri,
-        organisationlabel,
-        decision,
-        servicetypeuri,
-        classificationlabel,
-        casereference,
-        decisiontype,
-        status,
-        status_api,
-        casetext,
-        extractdate,
-        publisherlabel,
-        to_char(publicconsultationenddate, 'YYYY-MM-DD') as publicconsultationenddate,
-        servicetypelabel,
-        organisationuri,
-        uprn,
-        publisheruri,
-        appealdecision,
-        classificationuri,
-        coordinatereferencesystem,
-        to_char(casedate, 'YYYY-MM-DD') as casedate,
-        geoarealabel,
-        to_char(decisionnoticedate, 'YYYY-MM-DD') as decisionnoticedate,
-        groundarea,
-        to_char(decisiondate, 'YYYY-MM-DD') as decisiondate,
-        appealref,
-        gsscode
+        organisationlabel, organisationuri,
+        publicconsultationenddate, publicconsultationstartdate, publisherlabel, publisheruri,
+        responsesagainst, responsesfor, servicetypelabel,
+        servicetypeuri, status, status_api,
+        uprn
     FROM planning.applications %(where)s %(order)s
 """
 
@@ -209,7 +184,7 @@ def build_sql(args):
 
 def get_geojson(sql):
     conn = psycopg2.connect(app.config['CONNECTION_STRING'])
-    with contextlib.closing(conn.cursor(cursor_factory=psycopg2.extras.DictCursor)) as cur:
+    with contextlib.closing(conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)) as cur:
         cur.execute(sql)
         rows = cur.fetchall()
         json = pg2geojson.to_str(cur, rows, 'geom')

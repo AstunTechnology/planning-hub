@@ -1,35 +1,32 @@
-from flask import json
+import datetime
+import simplejson as json
 
 
 def to_obj(cur, rows, geom_col):
-
-    col_names = [desc[0] for desc in cur.description]
-    geom_idx = col_names.index(geom_col)
+    """ Creates a feature collection as a dict. Assumes rows is a dict """
 
     feature_collection = {'type': 'FeatureCollection', 'features': []}
 
     for row in rows:
+        geom = row.pop(geom_col)
         feature = {
             'type': 'Feature',
-            'geometry': row[geom_idx],
-            'properties': {},
+            'geometry': geom,
+            'properties': row,
         }
-
-        for index, col_name in enumerate(col_names):
-            if col_name != geom_col:
-                feature['properties'][col_name] = row[index]
-
         feature_collection['features'].append(feature)
 
     return feature_collection
 
 
 def to_str(cur, rows, geom_col):
-    """ Creates a feature collection as a string containing all rows. Assumes all values
-        can be serialised by json.dumps """
+    """ Creates a feature collection as a string. Assumes rows is a dict """
 
     feature_collection = to_obj(cur, rows, geom_col)
 
-    return json.dumps(feature_collection, indent=2)
+    def encode(obj):
+        if isinstance(obj, datetime.date):
+            return obj.isoformat()
+        raise TypeError(repr(obj) + " is not JSON serializable")
 
-# Based on https://github.com/jczaplew/postgis2geojson
+    return json.dumps(feature_collection, indent=2, use_decimal=True, default=encode)
