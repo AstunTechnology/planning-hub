@@ -40,10 +40,6 @@ formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
 console.setFormatter(formatter)
 logging.getLogger('').addHandler(console)
 log = {}
-for schema_name in VERSION.keys():
-    log[schema_name] = logging.getLogger(schema_name)
-    log[schema_name].addHandler(PostgresHandler(CONNECTION_STRING,
-                                                schema='hub'))
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SQL_DIR = os.path.join(SCRIPT_DIR, 'sql')
 
@@ -290,6 +286,10 @@ if __name__ == '__main__':
     logging.info('>>> Hub data load commencing <<<')
     conn = psycopg2.connect(CONNECTION_STRING)
     prepare_db(conn)
+    for schema_name in VERSION.keys():
+        log[schema_name] = logging.getLogger(schema_name)
+        log[schema_name].addHandler(PostgresHandler(CONNECTION_STRING,
+                                                schema='hub'))
     filename = 'planning_applications_feeds.txt'
     required_fields = ['extractdate', 'publisherlabel', 'casereference',
                        'caseurl', 'servicetypelabel', 'casetext',
@@ -306,11 +306,13 @@ if __name__ == '__main__':
                        'publicconsultationenddate', 'responsesfor',
                        'responsesagainst']
     unique_field = 'casereference'
+    
     try:
         with open(os.path.join(SCRIPT_DIR, filename)) as f:
             lines = f.read().splitlines()
     except IOError as e:
-        planning_log.error('Planning applications feed file '
+        lines = None
+        log['planning'].error('Planning applications feed file '
                            'could not be opened')
     if lines:
         for line in lines:
@@ -320,5 +322,5 @@ if __name__ == '__main__':
                         optional_fields=optional_fields,
                         unique_field=unique_field)
     else:
-        planning_log.error('No planning applications feeds configured')
+        log['planning'].error('No planning applications feeds configured')
     logging.info('<<< Hub data load completed >>>')
