@@ -79,6 +79,7 @@ def init_schema(conn, schema_name):
 
 
 def check_version(conn, schema_name, expected):
+    version = None
     with conn:
         with conn.cursor() as curs:
             try:
@@ -93,7 +94,7 @@ def check_version(conn, schema_name, expected):
     if is_correct:
         logging.info('"{}" schema version up-to-date ({})'.format(
             schema_name, str(expected)))
-    elif version < expected:
+    elif not version or version < expected:
         logging.info('"{}" schema version out of date ({} < {})'.format(
                      schema_name, str(version), str(expected)))
     else:
@@ -151,9 +152,9 @@ def prepare_db_schema(conn, schema_name):
                     with conn.cursor() as curs:
                         with open(os.path.join(SQL_DIR, filename)) as f:
                             curs.copy_expert(copy_sql, f)
-                    sql_create_script(conn, 'indexes', schema_name)
-                    sql_create_script(conn, 'views', schema_name)
-                    sql_create_script(conn, 'functions', schema_name)
+                sql_create_script(conn, 'indexes', schema_name)
+                sql_create_script(conn, 'views', schema_name)
+                sql_create_script(conn, 'functions', schema_name)
         except Exception as e:
             logging.critical(e)
             raise
@@ -212,7 +213,7 @@ def sql_import_feed(conn, schema_name, category, publisher, fields, values):
             curs.copy_expert(copy_sql, pseudo_file)
             log[schema_name].info('Feed data imported into database')
             update_sp = '"{}"."update_{}_data"'.format(schema_name, category)
-            curs.callproc(update_sp, [table_name])
+            curs.callproc(update_sp, [publisher])
             log[schema_name].info('Feed data pushed to live')
 
 

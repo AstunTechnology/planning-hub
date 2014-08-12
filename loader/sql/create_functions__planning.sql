@@ -6,7 +6,7 @@ $BODY$
 LANGUAGE sql;
 
 
-CREATE OR REPLACE FUNCTION planning.update_applications_data(table_name text)
+CREATE OR REPLACE FUNCTION planning.update_applications_data(gss_code text)
   RETURNS void AS
 $BODY$
 DECLARE
@@ -14,7 +14,7 @@ DECLARE
   incorrect_statuses text[];
 BEGIN
   EXECUTE 'SELECT array_agg(DISTINCT status)
-FROM "planning".'|| quote_ident(table_name) ||'
+FROM "planning"."applications_'|| gss_code ||'"
 WHERE status IS NOT NULL AND status NOT IN (
 	SELECT name
 	FROM "planning"."applications_statuses"
@@ -33,7 +33,7 @@ WHERE gsscode_id IN (
 	FROM "planning"."areas"
 	WHERE name IN (
 		SELECT DISTINCT publisherlabel
-		FROM "planning".'|| quote_ident(table_name) ||'
+		FROM "planning"."applications_'|| gss_code ||'"
 	)
 );
 
@@ -118,8 +118,8 @@ SELECT
   status.id,
   areas.id,
   ST_SetSRID(ST_MakePoint(geox::numeric, geoy::numeric), 4326)
-FROM "planning".'|| quote_ident(table_name) ||' app
- JOIN "planning"."areas" areas ON areas.name = app.publisherlabel
+FROM "planning"."applications_'|| gss_code ||'" app
+ JOIN "planning"."areas" areas ON areas.gss_code = '''|| gss_code ||'''
  LEFT JOIN "planning"."applications_statuses" status ON status.name = app.status;';
 	EXECUTE update_sql;
 END
