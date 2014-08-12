@@ -2,7 +2,6 @@ import os
 import re
 import psycopg2
 import psycopg2.extras
-import contextlib
 import pg2geojson
 from flask.ext.misaka import Misaka
 from werkzeug.urls import url_unquote_plus
@@ -184,7 +183,7 @@ def build_sql(args):
 
 def get_geojson(sql):
     conn = psycopg2.connect(app.config['CONNECTION_STRING'])
-    with contextlib.closing(conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)) as cur:
+    with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
         cur.execute(sql)
         rows = cur.fetchall()
         json = pg2geojson.to_str(cur, rows, 'geom')
