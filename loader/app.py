@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import StringIO
 import email
 import logging
@@ -49,6 +50,7 @@ SQL_DIR = os.path.join(SCRIPT_DIR, 'sql')
 assert (CONNECTION_STRING and SMTP_HOST and SMTP_USER
         and SMTP_PASS and HUB_ADMIN)
 
+
 def send_alert(text, schema_name, category, publisher_email=None):
     recipients = [HUB_ADMIN]
     if publisher_email:
@@ -61,6 +63,7 @@ def send_alert(text, schema_name, category, publisher_email=None):
     smtp.starttls()
     smtp.login(SMTP_USER, SMTP_PASS)
     smtp.sendmail(HUB_EMAIL, recipients, message.as_string())
+
 
 def init_schema(conn, schema_name):
     sql = '''
@@ -177,18 +180,18 @@ def get_feed_values(parent, fields, required, schema_name=None):
     else:
         log_handler = logging
     values = []
+    missing = []
     for field in fields:
         node = parent.find(field)
         text = '' if node is None else node.text.strip() if node.text else ''
         if required and not text:
-            err_msg = 'Required "{}" value missing or empty '.format(field)
+            err_msg = 'Required "{}" value missing or empty'.format(field)
             log_handler.error(err_msg)
+            missing.append(field)
         else:
             value = text if text else NULL
             values.append(value)
-    if required:
-        assert len(fields) == len(values)
-    return values
+    return values, missing
 
 
 def sql_import_feed(conn, schema_name, category, publisher, fields, values):
@@ -214,7 +217,7 @@ def sql_import_feed(conn, schema_name, category, publisher, fields, values):
 
 
 def import_feed(conn, schema_name, category, feed_details,
-                required_fields=[], optional_fields=[]):
+                required_fields=[], optional_fields=[], unique_field=None):
 
     message = 'Import successful'
     successful = True
@@ -231,29 +234,37 @@ def import_feed(conn, schema_name, category, feed_details,
     resp = requests.get(uri)
     root = etree.fromstring(resp.text)
     all_values = []
+    errors = []
     nodes = root.findall('{}_hub_feed'.format(schema_name))
-    count = 0
-    error = False
-    for node in nodes:
-        count = count + 1
-        try:
-            required_values = get_feed_values(node, required_fields,
-                                              True, schema_name)
-        except AssertionError as e:
-            error = True
-            err_msg = 'Missing required values in record {}'.format(count)
+
+    for i, node in enumerate(nodes):
+        vals_missing = get_feed_values(node, required_fields, True,
+                                       schema_name)
+        required_values, missing_values = vals_missing
+        if len(missing_values):
+            unique_node = node.find(unique_field)
+            unique_value = ''
+            if unique_node is not None and unique_node.text:
+                unique_value = unique_node.text.strip()
+            if unique_field and unique_value:
+                err_msg = ('Missing required values in record '
+                           'with ref: {}'.format(unique_value))
+            else:
+                err_msg = 'Missing required values in record {}'.format(i)
             log[schema_name].error(err_msg)
+            errors.append('{} ({})'.format(err_msg, ', '.join(missing_values)))
         else:
-            optional_values = get_feed_values(node, optional_fields,
-                                              False, schema_name)
+            optional_values, __ = get_feed_values(node, optional_fields,
+                                                  False, schema_name)
             values = required_values + optional_values
             all_values.append(values)
 
-    if len(all_values) != len(nodes):
+    if len(errors):
         successful = False
-        message = ('XML for {} from {} ({}) does not contain '
+        err_msg = ('XML for {} from {} ({}) does not contain '
                    'all required values').format(category, publisher, uri)
-        log[schema_name].error(message)
+        log[schema_name].error(err_msg)
+        message = '{}: \n\t{}'.format(err_msg, '\n\t'.join(errors))
     else:
         log[schema_name].info('Feed loaded')
         try:
@@ -293,6 +304,7 @@ if __name__ == '__main__':
                        'publicconsultationstartdate',
                        'publicconsultationenddate', 'responsesfor',
                        'responsesagainst']
+    unique_field = 'casereference'
     try:
         with open(os.path.join(SCRIPT_DIR, filename)) as f:
             lines = f.read().splitlines()
@@ -304,7 +316,8 @@ if __name__ == '__main__':
             feed_details = line.split('|')
             import_feed(conn, 'planning', 'applications', feed_details,
                         required_fields=required_fields,
-                        optional_fields=optional_fields)
+                        optional_fields=optional_fields,
+                        unique_field=unique_field)
     else:
         planning_log.error('No planning applications feeds configured')
     logging.info('<<< Hub data load completed >>>')
