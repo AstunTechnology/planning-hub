@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION planning.version()
 RETURNS numeric AS
 $BODY$
-  SELECT 0.21::numeric;
+  SELECT 0.30::numeric;
 $BODY$
 LANGUAGE sql;
 
@@ -36,6 +36,8 @@ WHERE gsscode_id IN (
 		FROM "planning"."applications_'|| gss_code ||'"
 	)
 );
+
+SET datestyle TO European;
 
 INSERT INTO "planning"."applications_all_data"
 (
