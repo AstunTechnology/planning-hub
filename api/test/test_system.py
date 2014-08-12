@@ -66,63 +66,88 @@ def test_search_status():
     assert_valid_values(feats, 'status_api', ['live', 'decided'])
 
 
-def test_search_gss_code():
-    gss_code = 'E07000214'
-    r = client.get('/developmentcontrol/0.1/applications/search?gss_code=%s' % gss_code)
+def test_search_gsscode():
+    gsscode = 'E07000214'
+    r = client.get('/developmentcontrol/0.1/applications/search?gsscode=%s' % gsscode)
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    assert_valid_values(feats, 'gsscode', [gss_code])
+    assert_valid_values(feats, 'gsscode', [gsscode])
 
 
-def test_search_case_date():
-    get_case_date = partial(get_property, 'casedate')
+def test_search_casedate():
+    get_casedate = partial(get_property, 'casedate')
     days = 'last_7_days'
     last_7_days = [(datetime.datetime.today() - datetime.timedelta(days=x)).strftime('%Y-%m-%d') for x in range(0, 7)]
-    r = client.get('/developmentcontrol/0.1/applications/search?case_date=%s' % days)
+    r = client.get('/developmentcontrol/0.1/applications/search?casedate=%s' % days)
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    case_dates = set(map(get_case_date, feats.get('features')))
-    ok_(case_dates.issubset(last_7_days))
+    casedates = set(map(get_casedate, feats.get('features')))
+    ok_(casedates.issubset(last_7_days))
 
 
-def test_search_decision_target_date():
-    get_decision_target_date = partial(get_property, 'decisiontargetdate')
+def test_search_decisiontargetdate():
+    get_decisiontargetdate = partial(get_property, 'decisiontargetdate')
     days = 14
     all_days = [(datetime.datetime.today() - datetime.timedelta(days=x)).strftime('%Y-%m-%d') for x in range(0, days)]
-    r = client.get('/developmentcontrol/0.1/applications/search?decision_target_date=last_%s_days' % days)
+    r = client.get('/developmentcontrol/0.1/applications/search?decisiontargetdate=last_%s_days' % days)
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    decision_target_date = set(map(get_decision_target_date, feats.get('features')))
-    ok_(decision_target_date.issubset(all_days))
+    decisiontargetdate = set(map(get_decisiontargetdate, feats.get('features')))
+    ok_(decisiontargetdate.issubset(all_days))
 
 
-def test_search_order_case_date():
-    get_case_date = partial(get_property, 'case_date')
-    r = client.get('/developmentcontrol/0.1/applications/search?order_by=case_date')
+def test_search_order_casedate():
+    get_casedate = partial(get_property, 'casedate')
+    r = client.get('/developmentcontrol/0.1/applications/search?orderby=casedate')
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    pg_sorted = map(get_case_date, feats.get('features'))
+    pg_sorted = map(get_casedate, feats.get('features'))
     py_sorted = sorted(pg_sorted)
     eq_(pg_sorted, py_sorted)
-    r = client.get('/developmentcontrol/0.1/applications/search?order_by=case_date&sort_order=desc')
+    r = client.get('/developmentcontrol/0.1/applications/search?orderby=casedate&sortorder=desc')
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    pg_sorted = map(get_case_date, feats.get('features'))
+    pg_sorted = map(get_casedate, feats.get('features'))
     py_sorted = list(reversed(sorted(pg_sorted)))
     eq_(pg_sorted, py_sorted)
 
 
 def test_search_order_status():
     get_status = partial(get_property, 'status')
-    r = client.get('/developmentcontrol/0.1/applications/search?order_by=status')
+    r = client.get('/developmentcontrol/0.1/applications/search?orderby=status')
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
     pg_sorted = map(get_status, feats.get('features'))
     py_sorted = sorted(pg_sorted)
     eq_(pg_sorted, py_sorted)
-    r = client.get('/developmentcontrol/0.1/applications/search?order_by=status&sort_order=desc')
+    r = client.get('/developmentcontrol/0.1/applications/search?orderby=status&sortorder=desc')
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
     pg_sorted = map(get_status, feats.get('features'))
     py_sorted = list(reversed(sorted(pg_sorted)))
     eq_(pg_sorted, py_sorted)
+
+
+def test_search_no_features():
+    # Search for a gsscode that does not exist
+    r = client.get('/developmentcontrol/0.1/applications/search?gsscode=E07000000')
+    eq_(r.status_code, 200)
+    feats = json.loads(r.data)
+    eq_(len(feats.get('features')), 0)
+
+
+def test_search_json():
+    r = client.get('/developmentcontrol/0.1/applications/search?')
+    eq_(r.status_code, 200)
+    eq_(r.headers.get('Content-Type'), 'application/json')
+
+
+def test_search_jsonp():
+    callback = 'foo'
+    r = client.get('/developmentcontrol/0.1/applications/search?callback=%s' % callback)
+    eq_(r.status_code, 200)
+    eq_(r.headers.get('Content-Type'), 'application/javascript')
+    head = '%s(' % callback
+    tail = ');'
+    eq_(head, r.data[0:len(head)])
+    eq_(tail, r.data[-len(tail):])

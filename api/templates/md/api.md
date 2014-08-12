@@ -21,7 +21,7 @@ Search for applications passing [filter parameters](#toc_6) via the query string
 
 Applications published by a given authority identified by [GSS code](http://en.wikipedia.org/wiki/ONS_coding_system#Current_GSS_coding_system):
 
-    {{ url_unquote_plus(url_for('.gss_code', code='<code>')) }}?
+    {{ url_unquote_plus(url_for('.gsscode', code='<code>')) }}?
 
 #### Single status code
 
@@ -47,15 +47,15 @@ The national planning schema provides a fixed set of application status values l
 
     API Parameter value | National Planning Schema value
     --------------------|-------------------------------------------------------------------------------
-    live                | Live - in the process of being decided
-    withdrawn           | Withdrawn
-    decided             | Decided
-    appeal              | Appeal - in the process of being decided via a non-determination appeal
-    called_in           | Called in - in the process of being considered by the Secretary of State
-    referred_to_sos     | Referred to SoS - in the process of being considered by the Secretary of State
-    invalid             | Invalid - requires something to happen to it before it can be decided
-    not_ours            | Not ours - belong to other planning authorities
-    registered          | Registered - received but not yet been processed and validated
+    `live`                | Live - in the process of being decided
+    `withdrawn`           | Withdrawn
+    `decided`             | Decided
+    `appeal`              | Appeal - in the process of being decided via a non-determination appeal
+    `called_in`           | Called in - in the process of being considered by the Secretary of State
+    `referred_to_sos`     | Referred to SoS - in the process of being considered by the Secretary of State
+    `invalid`             | Invalid - requires something to happen to it before it can be decided
+    `not_ours`            | Not ours - belong to other planning authorities
+    `registered`          | Registered - received but not yet been processed and validated
 
 ##### Query string
 
@@ -66,7 +66,7 @@ Live and decided applications
 
 #### GSS code
 
-Parameter name: `gss_code`
+Parameter name: `gsscode`
 
 One or more GSS codes. When specified via the query string multiple GSS code values are comma separated.
 
@@ -96,31 +96,31 @@ Current Districts and Borough codes within Surrey County:
 
 Surrey Heath and Mole Valley
 
-    gss_code=E07000214,E07000210
+    gsscode=E07000214,E07000210
 
 #### Date range
 
-Parameter names: `case_date`, `decision_target_date`, `decision_notice_date`, `decision_date`, `public_consultation_start_date`, `public_consultation_end_date`
+Parameter names: `casedate`, `decisiontargetdate`, `decisionnoticedate`, `decisiondate`, `publicconsultationstartdate`, `publicconsultationenddate`
 
 ##### Values
 
 
     Value        | Description
     -------------|---------------------------------------
-    last_7_days  | Last 7 days including the current day
-    last_14_days | Last 14 days including the current day
-    last_30_days | Last 30 days including the current day
-    last_90_days | Last 90 days including the current day
+    `last_7_days`  | Last 7 days including the current day
+    `last_14_days` | Last 14 days including the current day
+    `last_30_days` | Last 30 days including the current day
+    `last_90_days` | Last 90 days including the current day
 
 ##### Query string
 
 Applications with a case date with in the last 7 days:
 
-    case_date=last_7_days
+    casedate=last_7_days
 
-Applications with a public_consultation_start_date within the last 30 days:
+Applications with a publicconsultationstartdate within the last 30 days:
 
-    public_consultation_start_date=last_30_days
+    publicconsultationstartdate=last_30_days
 
 #### Bounding box
 
@@ -145,7 +145,7 @@ Results can be ordered by one of the following fields:
     Field     | Description
     ----------|-----------------------------------------
     status    | Application status code (alphabetically)
-    case_date | Case date (on date)
+    casedate | Case date (on date)
 
 An optional sort order can also be specified:
 
@@ -158,16 +158,16 @@ An optional sort order can also be specified:
 
 Order by case date most recent first:
 
-    order_by=status&sort_order=desc
+    orderby=status&sortorder=desc
 
 ### Example API requests
 
 All of the following requests return live applications for Surrey Heath District ordered by case date:
 
-[`{{ url_unquote_plus(url_for('.search', status='live', gss_code='E07000214', order_by='case_date')) }}`]({{ url_for('.search', status='live', gss_code='E07000214', order_by='case_date') }})
+[`{{ url_unquote_plus(url_for('.search', status='live', gsscode='E07000214', orderby='casedate')) }}`]({{ url_for('.search', status='live', gsscode='E07000214', orderby='casedate') }})
 
-[`{{ url_unquote_plus(url_for('.gss_code', code='E07000214', status='live', order_by='case_date')) }}`]({{ url_for('.gss_code', code='E07000214', status='live', order_by='case_date') }})
+[`{{ url_unquote_plus(url_for('.gsscode', code='E07000214', status='live', orderby='casedate')) }}`]({{ url_for('.gsscode', code='E07000214', status='live', orderby='casedate') }})
 
-[`{{ url_unquote_plus(url_for('.status', code='live', gss_code='E07000214', order_by='case_date')) }}`]({{ url_for('.status', code='live', gss_code='E07000214', order_by='case_date') }})
+[`{{ url_unquote_plus(url_for('.status', code='live', gsscode='E07000214', orderby='casedate')) }}`]({{ url_for('.status', code='live', gsscode='E07000214', orderby='casedate') }})
 
 {% endfilter %}
