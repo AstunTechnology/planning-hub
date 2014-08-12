@@ -36,16 +36,17 @@ python app.py
 Application settings are picked up from environment variables (e.g. on Linux `export HUB_ADMIN=admin@example.org`)
 #### PostgreSQL connection
 A standard PSQL connection string, using the names and password set up previously.
-`CONNECTION_STRING`: <tt>"user=_username_ password=_password_ dbname=_database_ port=_port_"</tt>
+* `CONNECTION_STRING`: <tt>"user=_username_ password=_password_ dbname=_database_ port=_port_"</tt>
 #### Email configuration
 The loader assumes that you will be using STARTTLS for security, otherwise standard SMTP settings:
-`SMTP_HOST`: DNS name or IP address of SMTP server
-`SMTP_USER`: Username for access to server 
-`SMTP_PASS`: Password for above user
+
+* `SMTP_HOST`: DNS name or IP address of SMTP server
+* `SMTP_USER`: Username for access to server 
+* `SMTP_PASS`: Password for above user
 
 The loader also requires an email address to send from and one to send administrative notifications to (e.g. import errors)
-`HUB_ADMIN`: Email address of Planning Hub administrator
-`HUB_EMAIL`: Email address that notifications are to be sent from.
+* `HUB_ADMIN`: Email address of Planning Hub administrator
+* `HUB_EMAIL`: Email address that notifications are to be sent from.
 
 ### Feed settings
 Planning application feed configuration resides in a `planning_applications_feeds.txt` file. This is a pipe (`|`) delimited file with each line of the format:
