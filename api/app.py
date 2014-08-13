@@ -9,10 +9,18 @@ from datetime import datetime, timedelta
 from jinja2 import ChoiceLoader, FileSystemLoader
 from flask import Flask, render_template, request, make_response, url_for, send_from_directory
 
+import logging
+from logging import StreamHandler
+
 # Define the Flask app and add support for Markdown in templates
 app = Flask(__name__)
 md = Misaka(tables=True, autolink=True, toc=True)
 md.init_app(app)
+
+# Configure logging to stderr
+log_handler = StreamHandler()
+log_handler.setLevel(logging.INFO)
+app.logger.addHandler(log_handler)
 
 # Add the to the template search path so that we can treat our built hubmap.js
 # as a template without having to manually copy it to the standard template
