@@ -225,6 +225,10 @@ def maps():
         {
             'url': url_for('.search', status='live', gsscode='E07000214', bbox='-0.806,51.286,-0.692,51.349'),
             'title': 'Live planning applications in the east of Surrey Heath'
+        },
+        {
+            'url': url_for('.search', status='live', gsscode='E07000210'),
+            'title': 'Live planning applications in Mole Valley'
         }
     ]
     manual_maps = [
