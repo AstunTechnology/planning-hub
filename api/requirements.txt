@@ -1,4 +1,5 @@
 Flask==0.10.1
+Flask-Cors==1.7.3
 Flask-Misaka==0.3.0
 Jinja2==2.7.3
 MarkupSafe==0.23
@@ -10,5 +11,6 @@ misaka==1.0.2
 nose==1.3.3
 psycopg2==2.5.3
 simplejson==3.6.2
+six==1.7.3
 testing.postgresql==1.0.5
 wsgiref==0.1.2
