@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+    </head>
+    <body>
+        <h1>Roll your own Leaflet map using CORS</h1>
+        <div id="map" style="width: 500px; height: 500px"></div>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/reqwest/1.1.0/reqwest.min.js"></script>
+        <script>
+
+            var map = L.map('map').setView([51.23, -0.32], 9);
+
+            var mqAttr = 'Tiles: <a href="http://www.mapquest.com/">MapQuest</a> - ';
+            var osmAttr = 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors - ';
+
+            var mqOpt = {
+                url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg',
+                options: {attribution: mqAttr + osmAttr, subdomains:'1234'}
+            };
+            var mq = L.tileLayer(mqOpt.url, mqOpt.options);
+
+            mq.addTo(map);
+
+            var apps = L.geoJson(null, {onEachFeature: popUp}).addTo(map);
+
+            reqwest({url: "http://localhost:5000/developmentcontrol/0.1/applications/search?status=decided&gsscode=E07000214"}).then(function (data) {
+                if (data.features && data.features.length) {
+                    map.fitBounds(apps.addData(data).getBounds());
+                } else {
+                    HubMap.warn('No results returned for data_url: ', data_url);
+                }
+            });
+
+            function popUp(f, l){
+                var content = L.Util.template('{casereference}', f.properties);
+                l.bindPopup(content);
+            }
+
+        </script>
+    </body>
+</html>
+
