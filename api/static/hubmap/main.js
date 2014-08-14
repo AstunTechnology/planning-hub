@@ -43,7 +43,15 @@
         });
 
         function popUp(f, l){
-            var content = L.Util.template(planAppInfo, f.properties);
+            var props = {},
+                key, val;
+            for (key in f.properties) {
+                if (f.properties.hasOwnProperty(key)) {
+                    val = f.properties[key];
+                    props[key] = (val === null) ? '' : val;
+                }
+            }
+            var content = L.Util.template(planAppInfo, props);
             l.bindPopup(content);
         }
 
