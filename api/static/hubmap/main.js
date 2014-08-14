@@ -11,7 +11,7 @@
     HubMap.map = function(elem, options) {
 
         var baseUrl = HubMap.BASE_URL || "{{ url_for('.index', _external=True).rstrip('/') }}";
-        var planAppInfo = HubMap.PLAN_APP_INFO || "<h2><a href='{caseurl}'>{casereference}</a></h2><p>{locationtext}</p><p>Status: {status}</p>";
+        var planAppInfo = HubMap.PLAN_APP_INFO || "<h2><a href='{caseurl}'>{casereference}</a></h2><p>{locationtext}</p><p>Status: {status} {statusdesc}</p>";
         L.Icon.Default.imagePath = baseUrl + "/embed/images";
 
         var map = L.map(elem).setView([51.23, -0.32], 9);
