@@ -56,3 +56,59 @@ identifier|feed uri|feed admin email
 * *identifier* - The GSS code of the organization publishing the feed
 * *feed uri* - Full URI of the feed
 * *feed admin uri* - email address of the person to be notified when there are errors with the feed import process
+
+### Data requirements
+The feed must have a single root element, each child node of this corresponds to a planning application record and must be named `planning_hub_feed`.
+The fields for each planning application record correspond to the ones defined in the [Local Open Data Incentive Scheme Planning Applications Schema](http://schemas.opendata.esd.org.uk/PlanningApplications/LocalOpenDataIncentiveSchemePlanningApplicationsSchemaGuidance.pdf), but field names must be lowercase. 
+
+#### Fields
+The following fields **must** be present in every record and have a valid value: `'extractdate', 'publisherlabel', 'casereference', 'caseurl', 'locationtext'`
+
+The following fields are optional: `'extractdate', 'publisherlabel', 'casereference', 'caseurl', 'servicetypelabel', 'casetext', 'locationtext'`
+
+All field values should be valid according to the Schema, although dates in `YYYY/MM/DD` or `YYYY-MM-DD` or ISO datetime format will also be accepted.
+
+
+#### Sample
+```xml
+<NewDataSet>
+  <planning_hub_feed>
+    <extractdate>2014/08/12</extractdate>
+    <publisheruri>http://opendatacommunities.org/id/PATH/TO/COUNCIL</publisheruri>
+    <publisherlabel>COUNCIL_NAME</publisherlabel>
+    <organisationuri>http://opendatacommunities.org/id/PATH/TO/COUNCIL</organisationuri>
+    <organisationlabel>COUNCIL_NAME</organisationlabel>
+    <casereference>REFERENCE</casereference>
+    <caseurl>URL_TO_APPLICATION_DETAILS</caseurl>
+    <casedate>2001/12/11</casedate>
+    <servicetypeuri>http://id.esd.org.uk/service/487</servicetypeuri>
+    <servicetypelabel>Full planning applications</servicetypelabel>
+    <classificationuri />
+    <classificationlabel />
+    <casetext>CASE_TEXT</casetext>
+    <locationtext>LOCATION_TEXT</locationtext>
+    <decisiontargetdate />
+    <status>Live</status>
+    <coordinatereferencesystem>WGS84</coordinatereferencesystem>
+    <geox>X</geox>
+    <geoy>Y</geoy>
+    <geopointlicensingurl>http://www.ordnancesurvey.co.uk/business-and-government/public-sector/mapping-agreements/end-user-licence.html</geopointlicensingurl>
+    <decisiondate />
+    <decision />
+    <decisiontype />
+    <decisionnoticedate />
+    <appealref />
+    <appealdecisiondate>2001/12/11</appealdecisiondate>
+    <appealdecision />
+    <geoareauri>http://statistics.data.gov.uk/doc/statistical-geography/GSS_CODE</geoareauri>
+    <geoarealabel>COUNCIL_NAME</geoarealabel>
+    <groundarea>1000</groundarea>
+    <agent />
+    <publicconsultationstartdate />
+    <publicconsultationenddate />
+    <responsesfor>0</responsesfor>
+    <responsesagainst>0</responsesagainst>
+  </planning_hub_feed>
+</NewDataSet>
+```
+
