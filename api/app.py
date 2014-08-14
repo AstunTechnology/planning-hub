@@ -77,7 +77,7 @@ SQL = """
         organisationlabel, organisationuri,
         publicconsultationenddate, publicconsultationstartdate, publisherlabel, publisheruri,
         responsesagainst, responsesfor, servicetypelabel,
-        servicetypeuri, status, status_api,
+        servicetypeuri, status, statuscode, statusdesc,
         uprn
     FROM planning.applications %(where)s %(order)s
 """
@@ -87,7 +87,7 @@ date_range_pattern = 'last_7_days|last_14_days|last_30_days|last_90_days'
 ARGS = {
     'status': {
         'pattern': 'live|withdrawn|decided|appeal|called_in|referred_to_sos|invalid|not_ours|registered',
-        'sql': 'status_api IN (%s)',
+        'sql': 'statuscode IN (%s)',
         'prep_fn': sql_in,
         'type': 'predicate'
     },

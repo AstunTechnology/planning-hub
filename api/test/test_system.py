@@ -55,15 +55,15 @@ def test_search_status():
     r = client.get('/developmentcontrol/0.1/applications/search?status=live')
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    assert_valid_values(feats, 'status_api', ['live'])
+    assert_valid_values(feats, 'statuscode', ['live'])
     r = client.get('/developmentcontrol/0.1/applications/search?status=decided')
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    assert_valid_values(feats, 'status_api', ['decided'])
+    assert_valid_values(feats, 'statuscode', ['decided'])
     r = client.get('/developmentcontrol/0.1/applications/search?status=live,decided')
     eq_(r.status_code, 200)
     feats = json.loads(r.data)
-    assert_valid_values(feats, 'status_api', ['live', 'decided'])
+    assert_valid_values(feats, 'statuscode', ['live', 'decided'])
 
 
 def test_search_gsscode():

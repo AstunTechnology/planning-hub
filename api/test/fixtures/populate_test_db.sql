@@ -64,10 +64,11 @@ CREATE SEQUENCE "all_data_id_seq"
 ALTER SEQUENCE "all_data_id_seq" OWNED BY "applications_all_data"."id";
 
 
-CREATE TABLE "applications_statuses" (
-    "id" integer NOT NULL,
-    "api_lookup" character(20) NOT NULL,
-    "description" "text" NOT NULL
+CREATE TABLE applications_statuses (
+    id integer NOT NULL,
+    api_lookup character(20) NOT NULL,
+    name text NOT NULL,
+    description text
 );
 
 CREATE SEQUENCE "application_statuses_id_seq"
@@ -106,7 +107,7 @@ SELECT pg_catalog.setval('"all_data_id_seq"', 1087, true);
 SELECT pg_catalog.setval('"application_statuses_id_seq"', 9, true);
 SELECT pg_catalog.setval('"areas_id_seq"', 11, true);
 
--- status_api: live, decided
+-- statuscode: live, decided
 INSERT INTO "applications_all_data" ("id", "caseurl", "geopointlicensingurl", "publicconsultationstartdate", "responsesfor", "locationtext", "agent", "geoy", "geox", "decisiontargetdate", "responsesagainst", "geoareauri", "organisationlabel", "decision", "servicetypeuri", "classificationlabel", "casereference", "decisiontype", "status_id", "casetext", "extractdate", "publisherlabel", "publicconsultationenddate", "servicetypelabel", "organisationuri", "uprn", "publisheruri", "appealdecision", "classificationuri", "coordinatereferencesystem", "casedate", "geoarealabel", "decisionnoticedate", "groundarea", "decisiondate", "appealref", "gsscode_id", "wkb_geometry") VALUES (572, 'http://isharemaps.surreyheath.gov.uk/custom/planning/default.aspx?casefullref=14/0590', 'http://www.ordnancesurvey.co.uk/business-and-government/public-sector/mapping-agreements/end-user-licence.html', '', '', 'ASCOT PARK POLO CLUB, WESTCROFT PARK FARM, WINDLESHAM ROAD, CHOBHAM, WOKING, GU24 8SN', 'Mr Ian Phillips Cunnane Town Planning', 51.3574478272068, -0.627934789729907, NULL, '', 'http://statistics.data.gov.uk/id/statistical-geography/E05007377', 'Surrey Heath Borough Council', '', 'http://standards.esd.org.uk/?uri=service%2F485&tab=details', 'Q6 Major all other major developments', '14/0590', '', 1, 'Erection of a two storey detached dwelling with accommodation in the roof space and a detached garage building with accommodation above following the demolition of existing buildings.', '2014-07-01', 'Surrey Heath Borough Council', NULL, 'Residential planning applications', 'http://opendatacommunities.org/id/district-council/surrey-heath', '10002673899', 'http://opendatacommunities.org/id/district-council/surrey-heath', '', 'http://opendatacommunities.org/def/concept/planning/application/6000/6006', 'WGS84', '2014-06-26', 'Chobham Ward', NULL, NULL, NULL, NULL, 8, '0101000020E610000088233DB30A18E4BF92F0B3D9C0AD4940');
 INSERT INTO "applications_all_data" ("id", "caseurl", "geopointlicensingurl", "publicconsultationstartdate", "responsesfor", "locationtext", "agent", "geoy", "geox", "decisiontargetdate", "responsesagainst", "geoareauri", "organisationlabel", "decision", "servicetypeuri", "classificationlabel", "casereference", "decisiontype", "status_id", "casetext", "extractdate", "publisherlabel", "publicconsultationenddate", "servicetypelabel", "organisationuri", "uprn", "publisheruri", "appealdecision", "classificationuri", "coordinatereferencesystem", "casedate", "geoarealabel", "decisionnoticedate", "groundarea", "decisiondate", "appealref", "gsscode_id", "wkb_geometry") VALUES (573, 'http://isharemaps.surreyheath.gov.uk/custom/planning/default.aspx?casefullref=14/0587', 'http://www.ordnancesurvey.co.uk/business-and-government/public-sector/mapping-agreements/end-user-licence.html', '', '', '16 BUTLER ROAD, BAGSHOT, GU19 5QF', 'Mr David Boucher Boucher Associates', 51.3557510037261, -0.683823888259673, NULL, '', 'http://statistics.data.gov.uk/id/statistical-geography/E05007375', 'Surrey Heath Borough Council', '', 'http://standards.esd.org.uk/?uri=service%2F485&tab=details', '', '14/0587', '', 1, 'Erection of a first floor side extension.', '2014-07-01', 'Surrey Heath Borough Council', NULL, 'Residential planning applications', 'http://opendatacommunities.org/id/district-council/surrey-heath', '100061540429', 'http://opendatacommunities.org/id/district-council/surrey-heath', '', '', 'WGS84', '2014-06-25', 'Bagshot Ward', NULL, NULL, NULL, NULL, 8, '0101000020E6100000369089A2E2E1E5BFEA42B73F89AD4940');
 INSERT INTO "applications_all_data" ("id", "caseurl", "geopointlicensingurl", "publicconsultationstartdate", "responsesfor", "locationtext", "agent", "geoy", "geox", "decisiontargetdate", "responsesagainst", "geoareauri", "organisationlabel", "decision", "servicetypeuri", "classificationlabel", "casereference", "decisiontype", "status_id", "casetext", "extractdate", "publisherlabel", "publicconsultationenddate", "servicetypelabel", "organisationuri", "uprn", "publisheruri", "appealdecision", "classificationuri", "coordinatereferencesystem", "casedate", "geoarealabel", "decisionnoticedate", "groundarea", "decisiondate", "appealref", "gsscode_id", "wkb_geometry") VALUES (574, 'http://isharemaps.surreyheath.gov.uk/custom/planning/default.aspx?casefullref=14/0304/1', 'http://www.ordnancesurvey.co.uk/business-and-government/public-sector/mapping-agreements/end-user-licence.html', '', '', '45 FRIMLEY GROVE GARDENS, FRIMLEY, CAMBERLEY, GU16 7JY', 'Mr M Bawtree MB Design Services', 51.3166720603452, -0.736198647710316, NULL, '', 'http://statistics.data.gov.uk/id/statistical-geography/E05007378', 'Surrey Heath Borough Council', '', 'http://standards.esd.org.uk/?uri=service%2F485&tab=details', 'Q21 Other householder developments', '14/0304/1', '', 1, 'Application for a Non Material Amendment to SU/14/0304 (Erection of a single storey rear extension to attach with existing single storey side garage extension to dwelling) to allow for the addition of roof windows and widening of proposed rear french casement doors.', '2014-07-01', 'Surrey Heath Borough Council', NULL, 'Residential planning applications', 'http://opendatacommunities.org/id/district-council/surrey-heath', '100061548190', 'http://opendatacommunities.org/id/district-council/surrey-heath', '', 'http://opendatacommunities.org/def/concept/planning/application/6000/6014', 'WGS84', '2014-06-25', 'Frimley Ward', NULL, NULL, NULL, NULL, 8, '0101000020E6100000B4CE6877F08EE7BFAA5EC7B588A84940');
@@ -630,15 +631,15 @@ INSERT INTO "applications_all_data" ("id", "caseurl", "geopointlicensingurl", "p
 -- INSERT INTO "applications_all_data" ("id", "caseurl", "geopointlicensingurl", "publicconsultationstartdate", "responsesfor", "locationtext", "agent", "geoy", "geox", "decisiontargetdate", "responsesagainst", "geoareauri", "organisationlabel", "decision", "servicetypeuri", "classificationlabel", "casereference", "decisiontype", "status_id", "casetext", "extractdate", "publisherlabel", "publicconsultationenddate", "servicetypelabel", "organisationuri", "uprn", "publisheruri", "appealdecision", "classificationuri", "coordinatereferencesystem", "casedate", "geoarealabel", "decisionnoticedate", "groundarea", "decisiondate", "appealref", "gsscode_id", "wkb_geometry") VALUES (1087, 'http://isharemaps.surreyheath.gov.uk/custom/planning/default.aspx?casefullref=13/0194', 'http://www.ordnancesurvey.co.uk/business-and-government/public-sector/mapping-agreements/end-user-licence.html', '', '', '2 FERN CLOSE, FRIMLEY, CAMBERLEY, GU16 9QU', 'Mr Donald Bradley Griffins Building Design', 51.3246568126894, -0.709772594203407, NULL, '', 'http://statistics.data.gov.uk/id/statistical-geography/E05007380', 'Surrey Heath Borough Council', '', 'http://standards.esd.org.uk/?uri=service%2F485&tab=details', 'Q21 Other householder developments', '13/0194', 'Delegated', NULL, 'Erection of a porch and enlargement of existing dormer window to include a pitched roof over the dormer window with associated alterations. ', '2014-07-01', 'Surrey Heath Borough Council', NULL, 'Residential planning applications', 'http://opendatacommunities.org/id/district-council/surrey-heath', '100061547702', 'http://opendatacommunities.org/id/district-council/surrey-heath', '', 'http://opendatacommunities.org/def/concept/planning/application/6000/6014', 'WGS84', '2013-03-28', 'Heatherside Ward', NULL, '926', '2013-05-23', NULL, 8, '0101000020E61000003C6CF60375B6E6BF5876BC5A8EA94940');
 
 
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (1, 'live                ', 'Live - in the process of being decided');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (2, 'withdrawn           ', 'Withdrawn');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (3, 'decided             ', 'Decided');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (4, 'appeal              ', 'Appeal - in the process of being decided via a non-determination appeal');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (5, 'called_in           ', 'Called in - in the process of being considered by the Secretary of State');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (6, 'referred_to_sos     ', 'Referred to SoS - in the process of being considered by the Secretary of State');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (7, 'invalid             ', 'Invalid - requires something to happen to it before it can be decided');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (8, 'not_ours            ', 'Not ours - belong to other planning authorities');
-INSERT INTO "applications_statuses" ("id", "api_lookup", "description") VALUES (9, 'registered          ', 'Registered - received but not yet been processed and validated');
+INSERT INTO applications_statuses VALUES (1, 'live                ', 'Live', 'in the process of being decided');
+INSERT INTO applications_statuses VALUES (2, 'withdrawn           ', 'Withdrawn', NULL);
+INSERT INTO applications_statuses VALUES (3, 'decided             ', 'Decided', NULL);
+INSERT INTO applications_statuses VALUES (4, 'appeal              ', 'Appeal', 'in the process of being decided via a non-determination appeal');
+INSERT INTO applications_statuses VALUES (5, 'called_in           ', 'Called in', 'in the process of being considered by the Secretary of State');
+INSERT INTO applications_statuses VALUES (6, 'referred_to_sos     ', 'Referred to SoS', 'in the process of being considered by the Secretary of State');
+INSERT INTO applications_statuses VALUES (7, 'invalid             ', 'Invalid', 'requires something to happen to it before it can be decided');
+INSERT INTO applications_statuses VALUES (8, 'not_ours            ', 'Not ours', 'belong to other planning authorities');
+INSERT INTO applications_statuses VALUES (9, 'registered          ', 'Registered', 'received but not yet been processed and validated');
 
 
 INSERT INTO "areas" ("id", "gss_code", "name", "organisationuri") VALUES (1, 'E07000207', 'Elmbridge', NULL);
@@ -675,49 +676,12 @@ CREATE INDEX "applications_all_data_status_id_gsscode_id_idx" ON "applications_a
 CREATE INDEX "applications_all_data_status_id_idx" ON "applications_all_data" USING "btree" ("status_id");
 CREATE INDEX "applications_all_data_wkb_geometry_idx" ON "applications_all_data" USING "gist" ("wkb_geometry");
 
-CREATE OR REPLACE VIEW planning.applications AS 
- SELECT apps.id,
-    apps.caseurl,
-    apps.geopointlicensingurl,
-    apps.publicconsultationstartdate,
-    apps.responsesfor,
-    apps.locationtext,
-    apps.agent,
-    apps.geoy,
-    apps.geox,
-    apps.decisiontargetdate,
-    apps.responsesagainst,
-    apps.geoareauri,
-    apps.organisationlabel,
-    apps.decision,
-    apps.servicetypeuri,
-    apps.classificationlabel,
-    apps.casereference,
-    apps.decisiontype,
-    apps.status_id,
-    apps.casetext,
-    apps.extractdate,
-    apps.publisherlabel,
-    apps.publicconsultationenddate,
-    apps.servicetypelabel,
-    apps.organisationuri,
-    apps.uprn,
-    apps.publisheruri,
-    apps.appealdecision,
-    apps.classificationuri,
-    apps.coordinatereferencesystem,
-    apps.casedate,
-    apps.geoarealabel,
-    apps.decisionnoticedate,
-    apps.groundarea,
-    apps.decisiondate,
-    apps.appealref,
-    apps.gsscode_id,
-    apps.wkb_geometry,
-    btrim(status.api_lookup::text) AS status_api,
-    status.description AS status,
-    areas.gss_code AS gsscode
-   FROM planning.applications_all_data apps
-   JOIN planning.areas areas ON apps.gsscode_id = areas.id
-   JOIN planning.applications_statuses status ON apps.status_id = status.id;
-
+CREATE OR REPLACE VIEW planning.applications AS
+  SELECT apps.*
+         , trim(status.api_lookup) AS statuscode
+         , status.name AS status
+         , status.description AS statusdesc
+         , areas.gss_code AS gsscode
+  FROM planning.applications_all_data apps
+    JOIN planning.areas areas ON (apps.gsscode_id = areas."id")
+    JOIN planning.applications_statuses status ON (apps.status_id = status."id");
