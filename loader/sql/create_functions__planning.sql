@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION planning.version()
 RETURNS numeric AS
 $BODY$
-  SELECT 0.30::numeric;
+  SELECT 0.31::numeric;
 $BODY$
 LANGUAGE sql;
 

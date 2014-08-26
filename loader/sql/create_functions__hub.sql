@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION version()
 RETURNS numeric AS
 $BODY$
-  SELECT 0.16::numeric;
+  SELECT 0.17::numeric;
 $BODY$
 LANGUAGE sql;
 

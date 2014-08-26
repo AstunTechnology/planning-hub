@@ -22,7 +22,7 @@ NULL = '\N'
 DELIMITER = '\t'
 LOG_LEVEL = next(val for val in [os.environ.get('HUB_LOG_LEVEL'), 'INFO']
                  if val is not None)
-VERSION = {'hub': Decimal('0.16'), 'planning': Decimal('0.30')}
+VERSION = {'hub': Decimal('0.17'), 'planning': Decimal('0.31')}
 CONNECTION_STRING = os.environ['CONNECTION_STRING']
 SMTP_HOST = os.environ['SMTP_HOST']
 SMTP_USER = os.environ['SMTP_USER']
