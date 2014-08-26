@@ -219,16 +219,16 @@ def embed(path):
 def maps():
     nocode_maps = [
         {
-            'url': url_for('.search', status='decided', gsscode='E07000214'),
-            'title': 'Decided planning applications in Surrey Heath'
-        },
-        {
-            'url': url_for('.search', status='live', gsscode='E07000214', bbox='-0.806,51.286,-0.692,51.349'),
-            'title': 'Live planning applications in the west of Surrey Heath'
+            'url': url_for('.search', status='live'),
+            'title': 'Live applications'
         },
         {
             'url': url_for('.search', status='live', gsscode='E07000210'),
             'title': 'Live planning applications in Mole Valley'
+        },
+        {
+            'url': url_for('.search', status='decided', gsscode='E07000214', bbox='-0.806,51.286,-0.692,51.349'),
+            'title': 'Decided planning applications in the west of Surrey Heath'
         }
     ]
     manual_maps = [
