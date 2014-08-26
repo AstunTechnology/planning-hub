@@ -200,7 +200,8 @@ def sql_import_feed(conn, schema_name, category, publisher, fields, values):
     create_sql = 'CREATE TABLE {} ({})'.format(fqtn, field_defs)
     copy_sql = "COPY {} ({}) FROM STDIN DELIMITER '{}' NULL '{}'".format(
         fqtn, field_names, DELIMITER, NULL)
-    formatted_values = '\n'.join([DELIMITER.join(row) for row in values])
+    escaped_values = [[val.replace(DELIMITER, '\\%s' % DELIMITER) for val in row] for row in values]
+    formatted_values = '\n'.join([DELIMITER.join(row) for row in escaped_values])
     pseudo_file = StringIO.StringIO(formatted_values)
     with conn:
         with conn.cursor() as curs:
