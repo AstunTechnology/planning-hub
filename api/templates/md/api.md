@@ -180,4 +180,8 @@ All of the following requests return live applications for Surrey Heath District
 
 [`{{ url_unquote_plus(url_for('.status', code='live', gsscode='E07000214', orderby='casedate')) }}`]({{ url_for('.status', code='live', gsscode='E07000214', orderby='casedate') }})
 
+## License
+
+Data accessible from this API is made available for non-commercial and personal use. It is licensed under the [Public Sector Mapping Agreement](http://www.ordnancesurvey.co.uk/business-and-government/public-sector/mapping-agreements/end-user-licence.html).
+
 {% endfilter %}
