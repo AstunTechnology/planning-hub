@@ -1,6 +1,6 @@
 1|E07000207|Elmbridge
 2|E07000208|Epsom and Ewell
-3|E07000209|Guildford
+3|E07000209|Guildford Borough Council
 4|E07000210|Mole Valley
 5|E07000211|Reigate and Banstead
 6|E07000212|Runnymede
