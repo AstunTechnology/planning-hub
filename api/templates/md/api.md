@@ -1,5 +1,6 @@
 {% filter markdown %}
-## Publishing API
+<a id="api"></a>
+## API
 
 Web API to retrieve applications in [GeoJSON](http://geojson.org/) format optionally [filtering](#toc_6) and [sorting](#toc_19) on one of the fields described below.
 
