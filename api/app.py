@@ -219,8 +219,8 @@ def embed(path):
 def maps():
     nocode_maps = [
         {
-            'url': url_for('.search', status='live'),
-            'title': 'Live applications'
+            'url': url_for('.search', status='live', casedate='last_30_days'),
+            'title': 'Live applications within the last 30 days'
         },
         {
             'url': url_for('.search', status='live', gsscode='E07000210'),
