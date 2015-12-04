@@ -5,7 +5,8 @@
 5|E07000211|Reigate and Banstead
 6|E07000212|Runnymede
 7|E07000213|Spelthorne Borough Council
+8|E07000214|Surrey Heath Borough Council
 9|E07000215|Tandridge
 10|E07000216|Waverley
 11|E07000217|Woking
-8|E07000214|Surrey Heath Borough Council
+12|E10000030|Surrey
