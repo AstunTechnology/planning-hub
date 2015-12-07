@@ -3,6 +3,7 @@ import StringIO
 import email
 import logging
 import os
+import sys
 import re
 
 from datetime import datetime
@@ -229,11 +230,14 @@ def import_feed(conn, schema_name, category, feed_details,
     if not required_fields and not optional_fields:
         message = 'No fields configured for this import!'
     log[schema_name].info('Attempting load of {}'.format(uri))
+    sys.stderr.write('uri: {}\n'.format(uri))
     resp = requests.get(uri)
+    # sys.stderr.write('resp.text: \n{}\n'.format(resp.text))
     root = etree.fromstring(resp.text)
     all_values = []
     errors = []
     nodes = root.findall('{}_hub_feed'.format(schema_name))
+    # sys.stderr.write('len: \n{}\n'.format(len(nodes)))
 
     for i, node in enumerate(nodes):
         vals_missing = get_feed_values(node, required_fields, True,
