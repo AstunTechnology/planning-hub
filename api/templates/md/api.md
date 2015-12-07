@@ -77,7 +77,7 @@ Each authority has a unique (Government Statistical Service) GSS code assigned b
 
 A nine character GSS code.
 
-Current Districts and Borough codes within Surrey County:
+Current supported GSS codes:
 
     GSS Code  | Authority
     ----------|----------------------
@@ -92,6 +92,7 @@ Current Districts and Borough codes within Surrey County:
     E07000215 | Tandridge
     E07000216 | Waverley
     E07000217 | Woking
+    E10000030 | Surrey County
 
 ##### Query string
 
