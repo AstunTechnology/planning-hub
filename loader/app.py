@@ -232,8 +232,8 @@ def import_feed(conn, schema_name, category, feed_details,
     log[schema_name].info('Attempting load of {}'.format(uri))
     sys.stderr.write('uri: {}\n'.format(uri))
     resp = requests.get(uri)
-    # sys.stderr.write('resp.text: \n{}\n'.format(resp.text))
-    root = etree.fromstring(resp.text)
+    # sys.stderr.write('resp.content: \n{}\n'.format(resp.content))
+    root = etree.fromstring(resp.content)
     all_values = []
     errors = []
     nodes = root.findall('{}_hub_feed'.format(schema_name))
