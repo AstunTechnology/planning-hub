@@ -236,6 +236,17 @@ def import_feed(conn, schema_name, category, feed_details,
     resp = requests.get(uri)
     # sys.stderr.write('resp.content: \n{}\n'.format(resp.content))
 
+    # FIXME Manually remove hex entities considered invalid for now
+    content = resp.content
+    for entity in ['&#x16;']:
+        content = content.replace(entity, '')
+
+    # FIXME Temporary fix for Mole Valley feed which is missing a closing sharp
+    # bracket
+    content = content.rstrip()
+    if content[-1] != '>':
+        content += '>'
+
     try:
         root = etree.fromstring(content)
     except (lxml.etree.XMLSyntaxError) as e:
