@@ -5,6 +5,7 @@ import logging
 import os
 import sys
 import re
+import traceback
 
 from datetime import datetime
 from decimal import *
@@ -15,6 +16,7 @@ import psycopg2
 import psycopg2.extras
 import requests
 
+import lxml
 from lxml import etree
 
 from postgres_logging import PostgresHandler
@@ -233,7 +235,14 @@ def import_feed(conn, schema_name, category, feed_details,
     sys.stderr.write('uri: {}\n'.format(uri))
     resp = requests.get(uri)
     # sys.stderr.write('resp.content: \n{}\n'.format(resp.content))
-    root = etree.fromstring(resp.content)
+
+    try:
+        root = etree.fromstring(content)
+    except (lxml.etree.XMLSyntaxError) as e:
+        # Print the exception then skip this feed
+        sys.stderr.write(traceback.format_exc())
+        return
+
     all_values = []
     errors = []
     nodes = root.findall('{}_hub_feed'.format(schema_name))
