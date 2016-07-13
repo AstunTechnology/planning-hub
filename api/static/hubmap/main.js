@@ -16,13 +16,12 @@
 
         var map = L.map(elem).setView([51.23, -0.32], 9);
 
-        var mqAttr = 'Tiles: <a href="http://www.mapquest.com/">MapQuest</a> - ';
-        var osmAttr = 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors - ';
+        var osmAttr = 'Tiles: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors - ';
         var hubAttr = 'Planning Applications: <a href="#">Surrey Planning Hub</a>';
 
         var mqOpt = {
-            url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg',
-            options: {attribution: mqAttr + osmAttr + hubAttr, subdomains:'1234'}
+            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            options: {attribution: osmAttr + hubAttr}
         };
         var mq = L.tileLayer(mqOpt.url, mqOpt.options);
 
