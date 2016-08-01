@@ -238,7 +238,7 @@ def import_feed(conn, schema_name, category, feed_details,
 
     # FIXME Manually remove hex entities considered invalid for now
     content = resp.content
-    for entity in ['&#x16;']:
+    for entity in ['&#x16;', '&#x12;']:
         content = content.replace(entity, '')
 
     # FIXME Temporary fix for Mole Valley feed which is missing a closing sharp
