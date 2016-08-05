@@ -205,6 +205,7 @@ def sql_import_feed(conn, schema_name, category, publisher, fields, values):
         fqtn, field_names, DELIMITER, NULL)
     escaped_values = [[val.replace(DELIMITER, '\\%s' % DELIMITER) for val in row] for row in values]
     formatted_values = '\n'.join([DELIMITER.join(row) for row in escaped_values])
+    # sys.stderr.write(formatted_values)
     pseudo_file = StringIO.StringIO(formatted_values)
     with conn:
         with conn.cursor() as curs:
@@ -240,6 +241,10 @@ def import_feed(conn, schema_name, category, feed_details,
     content = resp.content
     for entity in ['&#x16;', '&#x12;']:
         content = content.replace(entity, '')
+
+    # FIXME Replace carriage return followed by a newline chars with comma for
+    # Runnymede
+    content = content.replace('&#xD;\n', ', ')
 
     # FIXME Temporary fix for Mole Valley feed which is missing a closing sharp
     # bracket
