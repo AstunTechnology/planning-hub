@@ -239,7 +239,7 @@ def import_feed(conn, schema_name, category, feed_details,
 
     # FIXME Manually remove hex entities considered invalid for now
     content = resp.content
-    for entity in ['&#x16;', '&#x12;']:
+    for entity in ['&#x1;', '&#x16;', '&#x12;']:
         content = content.replace(entity, '')
 
     # FIXME Replace carriage return followed by a newline chars with comma for
