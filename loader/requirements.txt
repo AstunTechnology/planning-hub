@@ -1,5 +1,8 @@
-argparse==1.2.1
+certifi==2018.11.29
+chardet==3.0.4
+idna==2.8
 lxml==4.2.6
+pkg-resources==0.0.0
 psycopg2==2.7.6.1
-requests==2.3.0
-wsgiref==0.1.2
+requests==2.21.0
+urllib3==1.24.1
