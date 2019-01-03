@@ -3,12 +3,12 @@ import re
 import psycopg2
 import psycopg2.extras
 import pg2geojson
-from flask.ext.misaka import Misaka
+from flask_misaka import Misaka
 from werkzeug.urls import url_unquote_plus
 from datetime import datetime, timedelta
 from jinja2 import ChoiceLoader, FileSystemLoader
 from flask import Flask, render_template, request, make_response, url_for, send_from_directory
-from flask.ext.cors import CORS
+from flask_cors import CORS
 
 import logging
 from logging import StreamHandler
@@ -19,7 +19,7 @@ md = Misaka(tables=True, autolink=True, toc=True)
 md.init_app(app)
 
 # Exposes all resources matching /developmentcontrol/* to CORS
-CORS(app, resources=r'/developmentcontrol/*', headers=['Content-Type', 'X-Requested-With'])
+CORS(app, resources=r'/developmentcontrol/*', allowed_headers=['Content-Type', 'X-Requested-With'])
 
 # Configure logging to stderr
 log_handler = StreamHandler()
