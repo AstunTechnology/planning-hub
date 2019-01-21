@@ -3,7 +3,7 @@ Click==7.0
 Flask==1.0.2
 Flask-Cors==3.0.7
 Flask-Misaka==0.4.1
-gunicorn==19.1.0
+gunicorn==19.9.0
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==0.23
