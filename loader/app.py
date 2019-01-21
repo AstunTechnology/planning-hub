@@ -246,11 +246,11 @@ def import_feed(conn, schema_name, category, feed_details,
     # Runnymede
     content = content.replace('&#xD;\n', ', ')
 
-    # FIXME Temporary fix for Mole Valley feed which is missing a closing sharp
-    # bracket
+    # FIXME Temporary fix for Mole Valley and others which has a malformed end tag
     content = content.rstrip()
-    if content[-1] != '>':
-        content += '>'
+    # if content[-1] != '>':
+    #     content += '>'
+    content = re.sub(r"(.?)(\<{1}[^>]{0,})$", "\\1</NewDataSet>", content, 1)
 
     try:
         root = etree.fromstring(content)
