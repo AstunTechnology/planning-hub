@@ -15,4 +15,4 @@ pycparser==2.19
 simplejson==3.6.2
 six==1.7.3
 testing.postgresql==1.0.5
-Werkzeug==0.14.1
+Werkzeug==0.15.3
